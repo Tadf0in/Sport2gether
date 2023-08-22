@@ -2,12 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+
 class Sport(models.Model):
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.name
     
+
 
 class AppUser(models.Model):
     user_id = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -57,3 +59,14 @@ class UserSports(models.Model):
     class Meta:
         verbose_name ='User Sports'
         verbose_name_plural ='Users Sports'
+
+
+
+class FeedBack(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    raisons = models.CharField(max_length=128)
+    attentes = models.CharField(max_length=128)
+
+    class Meta:
+        verbose_name ='Feedback'
+        verbose_name_plural ='Feedbacks'
