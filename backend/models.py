@@ -64,7 +64,21 @@ class UserSports(models.Model):
 
 class FeedBack(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    raison_choice = models.CharField(
+        max_length=3,
+        choices=[
+            ("oth", "Autre")
+        ]
+    )
     raisons = models.CharField(max_length=128)
+
+    attente_choice = models.CharField(
+        max_length=3,
+        choices=[
+            ("oth", "Autre")
+        ]
+    )
     attentes = models.CharField(max_length=128)
 
     class Meta:
