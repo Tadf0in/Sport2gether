@@ -44,3 +44,16 @@ class AppUser(models.Model):
     class Meta:
         verbose_name ='App User'
         verbose_name_plural ='App Users'
+
+
+
+class UserSports(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    sport_id = models.ForeignKey(Sport, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user_id.username  + " - " + self.sport_id.name
+
+    class Meta:
+        verbose_name ='User Sports'
+        verbose_name_plural ='Users Sports'
