@@ -21,6 +21,7 @@ class AppUser(models.Model):
         null=True, blank=True
     )
     ville = models.CharField(max_length=128)
+    tel = models.CharField(max_length=15, blank=True, null=True)
 
     FREQUENCE_ENTRAINEMENT_CHOICES = [
         ("tlj", "Très élevée (Tous les jours)"),
@@ -71,7 +72,7 @@ class FeedBack(models.Model):
             ("oth", "Autre")
         ]
     )
-    raisons = models.CharField(max_length=128)
+    raisons = models.CharField(max_length=128, blank=True)
 
     attente_choice = models.CharField(
         max_length=3,
@@ -79,7 +80,7 @@ class FeedBack(models.Model):
             ("oth", "Autre")
         ]
     )
-    attentes = models.CharField(max_length=128)
+    attentes = models.CharField(max_length=128, blank=True)
 
     class Meta:
         verbose_name ='Feedback'
