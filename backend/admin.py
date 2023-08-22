@@ -1,6 +1,22 @@
 from django.contrib import admin
 from.models import AppUser, Sport, UserSports, FeedBack
 
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+
+
+# User Inline
+class AppUserInline(admin.StackedInline):
+    model = AppUser
+    can_delete = False
+
+class AppUserAdmin(UserAdmin):
+    inlines = [AppUserInline]
+
+admin.site.unregister(User)
+admin.site.register(User, AppUserAdmin)
+
+
 
 
 @admin.register(AppUser)
