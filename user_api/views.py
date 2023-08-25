@@ -3,7 +3,7 @@ from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
-from django.contrib.auth import get_user_model, login, logout
+from django.contrib.auth import login, logout
 
 
 class UserRegister(APIView):
@@ -53,6 +53,6 @@ class UserView(APIView):
     authentication_classes = (SessionAuthentication,)
      
     def get(self, request):
-        print(request)
         serializer = UserSerializer(request.user)
+        print(serializer)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
