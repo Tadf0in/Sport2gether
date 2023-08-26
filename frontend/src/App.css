@@ -36,3 +36,22 @@
     transform: rotate(360deg);
   }
 }
+
+
+.form {
+  width: 70%;
+  padding-left: 15%;
+}
+.progress {
+  background-color: green;
+}
+.form-body {
+  display: flex;
+  flex-direction: column;
+}
+.span-sports {
+  display: flex;
+  flex-direction: column;
+  height: 20px;
+  overflow-y: scroll;
+}
