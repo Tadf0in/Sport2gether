@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import logo from './logo.svg';
 import './App.css';
 import Button from 'react-bootstrap/Button';
@@ -27,12 +26,3 @@ function App() {
 }
 
 export default App;
-=======
-import './App.css';
-
-function App() {
-  return <div classname="App"></div>
-}
-
-export default App;
->>>>>>> 779beb1 (prout)
