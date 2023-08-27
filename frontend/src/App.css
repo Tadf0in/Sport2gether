@@ -45,6 +45,24 @@
 .progress {
   background-color: green;
 }
+.form .header {
+  display: flex;
+  flex-direction: column;
+}
+.form .header span {
+  display: flex;
+  align-items: center;
+}
+.form .header h1 {
+  text-align: left;
+  width: 80%;
+}
+.form .header .skip {
+  width: 20%;
+  height: 20px;
+  
+  text-align: right;
+}
 .form-body {
   display: flex;
   flex-direction: column;
@@ -52,6 +70,6 @@
 .span-sports {
   display: flex;
   flex-direction: column;
-  height: 20px;
+  height: 200px;
   overflow-y: scroll;
 }

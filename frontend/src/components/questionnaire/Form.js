@@ -9,6 +9,29 @@ import Questions from './Questions'
 function Form() {
 
     const [page, setPage] = useState(0)
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        confirm_pass: '',
+        first_name: '',
+        last_name: '',
+        age: '',
+        gender: '',
+        sports: {
+            'velo': ["Vélo", true],
+            'nage': ["Natation", false],
+            'cap': ["Course à pied", false]
+        },
+        frequence: '',
+        ville: '',
+        obj_court: '',
+        obj_long: '',
+        defi: '',
+        raison: '',
+        det_raison: '',
+        attent: '',
+        det_attentes: ''
+    })
 
     const Titles = ["Créez votre compte", "Informations personnelles", "Pratique sportive", "Objectifs", "Questionnaire"]
     const Desc = [
@@ -22,20 +45,28 @@ function Form() {
     const pageDisplay = () =>  {
         switch (page) {
             case 0:
-                return <Register />
+                return <Register formData={formData} setFormData={setFormData}/>
                 break
             case 1:
-                return <Infos />
+                return <Infos formData={formData} setFormData={setFormData}/>
                 break
             case 2:
-                return <Sport />
+                return <Sport formData={formData} setFormData={setFormData}/>
                 break
             case 3:
-                return <Objectifs />
+                return <Objectifs formData={formData} setFormData={setFormData}/>
                 break
             case 4:
-                return <Questions />
+                return <Questions formData={formData} setFormData={setFormData}/>
                 break
+            default:
+                throw new Error('Page de questionnaire inconnue')
+        }
+    }
+
+    const skipDisplay = () => {
+        if (page > 2){                        
+            return <button className='skip'>SKIP</button>
         }
     }
 
@@ -46,8 +77,11 @@ function Form() {
             </div>
             <div className='form-container'>
                 <div className='header'>
-                <h1>{Titles[page]}</h1>
-                <h4>{Desc[page]}</h4>
+                    <span>
+                        <h1>{Titles[page]}</h1>
+                        {skipDisplay()}
+                    </span>
+                    <h4>{Desc[page]}</h4>
                 </div>
 
                 <div className='body'>
