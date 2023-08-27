@@ -2,22 +2,19 @@ import React from 'react'
 
 function Sport({ formData, setFormData }) {
 
-    const getCheckedSports = () => {
-        let sports_list = []
-
-        for (let [key, value] of Object.entries(formData.sports)) {
-            if (value[1] === true) {
-                sports_list.push(key)
-            }
-        }
-        return sports_list
-    }
-
-    const SpanSport = ({ abrev, complet }) => {
+    const SpanSport = ({ abrev, complet, isChecked }) => {
         return (
             <span className='span-sport'>
-                <input type='checkbox' id={abrev} checked={getCheckedSports().includes(abrev)} 
-                onChange={(event) => {setFormData({...formData, sports: {...formData.sports, [abrev]: [complet, event.target.checked]}})}}/>
+                <input type='checkbox' id={abrev} checked={isChecked} 
+                onChange={(event) => {setFormData({
+                    ...formData, sports: {
+                        ...formData.sports, [abrev]: {
+                            abrev: abrev,
+                            name: complet,
+                            checked: event.target.checked
+                        }
+                    }
+                })}}/>
                 <label htmlFor={abrev}>{complet}</label>
             </span>
             /* exemple (abrev='velo', complet="Vélo") : <input type='checkbox' id="velo" checked={getCheckedSports().includes('velo')} 
@@ -26,11 +23,12 @@ function Sport({ formData, setFormData }) {
         )
     }
     const SpanSports = ({sports}) => {
+        console.log(sports)
         return (
             <div className='span-sports'>{
                 Object.keys(sports).map((sport, i) => {
                     return (
-                        <SpanSport abrev={sport} complet={sports[sport][0]} />
+                        <SpanSport abrev={sport} complet={sports[sport].name} isChecked={sports[sport].checked} />
                     )
                 })}    
             </div>

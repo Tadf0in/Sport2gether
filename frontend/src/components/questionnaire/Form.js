@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Register from './Register'
 import Infos from './Infos'
 import Sport from './Sport'
 import Objectifs from './Objectifs'
 import Questions from './Questions'
+import axios from 'axios'
+
 
 
 function Form() {
-
     const [page, setPage] = useState(0)
+    const [sports, setSports] = useState([])
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -17,11 +19,7 @@ function Form() {
         last_name: '',
         age: '',
         gender: '',
-        sports: {
-            'velo': ["Vélo", true],
-            'nage': ["Natation", false],
-            'cap': ["Course à pied", false]
-        },
+        sports: {},
         frequence: '',
         ville: '',
         obj_court: '',
@@ -33,6 +31,27 @@ function Form() {
         det_attentes: ''
     })
 
+    useEffect(() => {
+        const getSportsApi = async () => {
+            await axios.get('http://127.0.0.1:8000/api/sports')
+            .then(res => setSports(res.data))
+            .catch(err => console.log(err))
+        } 
+        getSportsApi()
+    }, []) 
+
+    const setSportsList = () => {
+        let sportsList = []
+        for (let i in sports) {
+            sportsList[[sports[i].abrev]] = {
+                name: sports[i].name,
+                icon_url: sports[i].icon_url,
+                checked: false,
+            } 
+        }
+        setFormData({...formData, sports: sportsList})
+    }
+    
     const Titles = ["Créez votre compte", "Informations personnelles", "Pratique sportive", "Objectifs", "Questionnaire"]
     const Desc = [
         " ", 
@@ -89,14 +108,22 @@ function Form() {
                 </div>
 
                 <div className='footer'>
-                    <button 
+                    <button className='previous'
                     disabled={page===0}
                     onClick={() => setPage(page - 1)}
                     >Précédent</button>
-                    <button 
-                    disabled={page === Titles.length - 1}
-                    onClick={() => setPage(page + 1)}
-                    >Suivant</button>
+                    <button className='next'
+                    onClick={() => {
+                        if (page === (Titles.length - 1)) {
+                            alert("Terminé")
+                            console.log(formData)
+                        } else {
+                            setPage(page + 1)
+                            setSportsList()
+                        }
+                    }}>
+                    {page === (Titles.length - 1) ? "Terminer" : "Suivant"}
+                    </button>
                 </div>
             </div>            
         </div>
