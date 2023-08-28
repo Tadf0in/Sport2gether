@@ -110,6 +110,11 @@ function Form() {
             obj_long: data.obj_long,
             defi: data.defi,
             frequence: data.frequence,
+            raison: data.raison,
+            det_raison: data.det_raison,
+            attente: data.attente,
+            det_attentes: data.det_attentes,
+            sports: data.sports
         }
         console.log(infos, typeof(infos.age))
 

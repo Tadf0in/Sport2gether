@@ -34,7 +34,11 @@ class AppUser(models.Model):
         ("non", "Non renseignée"),
         ("var", "Variable")
     ]
-    frequence_entrainement = models.CharField(max_length=128, default="Non renseignée")
+    frequence_entrainement = models.CharField(
+        max_length=3,
+        choices=FREQUENCE_ENTRAINEMENT_CHOICES,
+        default="non",
+    )
     objectif_court_terme = models.CharField(max_length=128, blank=True)
     objectif_long_terme = models.CharField(max_length=128, blank=True)
     plus_gros_defi_releve = models.CharField(max_length=128, blank=True)
@@ -64,10 +68,27 @@ class UserSports(models.Model):
 class FeedBack(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    raison_choice = models.CharField(max_length=128)
+    raison_choice = models.CharField(
+        max_length=3,
+        choices=[
+            ("ami", "Un ami m'en a parlé"),
+            ("pub", "Une publicité"),
+            ("app", "Depuis l'AppStore"),
+            ("oth", "Autre")
+        ],
+        default="oth"
+    )
     raisons = models.CharField(max_length=128, blank=True)
 
-    attente_choice = models.CharField(max_length=1228)
+    attente_choice = models.CharField(
+        max_length=3,
+        choices=[
+            ("ren", "Faire des rencontres"),
+            ("mot", "Trouver de la motivation"),
+            ("oth", "Autre")
+        ],
+        default="oth"
+    )
     attentes = models.CharField(max_length=128, blank=True)
 
     class Meta:
