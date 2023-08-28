@@ -8,11 +8,11 @@ function Infos({ formData, setFormData }) {
         <input type='number' placeholder='Âge' value={formData.age} onChange={(event) => setFormData({...formData, age: event.target.value})}/>
         <span className='span-gender'>
             <label htmlFor='male'>Homme</label>
-             <input name='gender' id='male' type='radio' checked={formData.gender === 'Homme'} value={formData.gender} 
-             onChange={() => setFormData({...formData, gender: (formData.gender === 'Homme' ? 'Femme' : 'Homme')})}/>
+             <input name='gender' id='male' type='radio' checked={formData.gender === 'H'} value={formData.gender} 
+             onChange={() => setFormData({...formData, gender: (formData.gender === 'H' ? 'F' : 'H')})}/>
             <label htmlFor='female'>Femme</label>
-            <input name='gender' id='female' type='radio' checked={formData.gender === 'Femme'} 
-            onChange={() => setFormData({...formData, gender: (formData.gender === 'Femme' ? 'Homme' : 'Femme')})}/> 
+            <input name='gender' id='female' type='radio' checked={formData.gender === 'F'} 
+            onChange={() => setFormData({...formData, gender: (formData.gender === 'F' ? 'H' : 'F')})}/> 
         </span>
     </div>
   )

@@ -10,7 +10,7 @@ user_model = get_user_model()
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_model
-        fields = '__all__'
+        fields = ['username', 'password']
 
     def create(self, infos):
         print(infos)
@@ -23,19 +23,26 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         new_appuser = AppUser()
         new_appuser.user_id = new_user       
-        new_appuser.age = infos['age']
+        new_appuser.age = int(infos['age'])
+        new_appuser.sexe = infos['sexe']
         new_appuser.ville = infos['ville']
+
+        new_appuser.objectif_court_terme = infos['obj_court']
+        new_appuser.objectif_long_terme = infos['obj_long']
+        new_appuser.plus_gros_defi_releve = infos['defi']
+        new_appuser.frequence_entrainement = infos['frequence']
+
         new_appuser.save()        
         
         # new_user.first_name = infos['first_name']
         # new_user.last_name = infos['last_name']
-        # new_user.sexe = infos['sexe']
-        # new_user.tel = infos['tel']
+        # new_appuser.sexe = infos['sexe']
+        # new_appuser.tel = infos['tel']
 
-        # new_user.frequence_entrainement = infos['frequence_entrainement']
-        # new_user.objectif_court_terme = infos['objectif_court_terme']
-        # new_user.objectif_long_terme = infos['objectif_long_terme']
-        # new_user.plus_gros_defi_releve = infos['plus_gros_defi_releve']
+        # new_appuser.frequence_entrainement = infos['frequence_entrainement']
+        # new_appuser.objectif_court_terme = infos['objectif_court_terme']
+        # new_appuser.objectif_long_terme = infos['objectif_long_terme']
+        # new_appuser.plus_gros_defi_releve = infos['plus_gros_defi_releve']
 
         return new_user
     

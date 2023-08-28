@@ -6,6 +6,10 @@ import Objectifs from './Objectifs'
 import Questions from './Questions'
 import axios from 'axios'
 
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+axios.defaults.withCredentials = true;
+
 
 function Form() {
     const [page, setPage] = useState(0)
@@ -25,7 +29,7 @@ function Form() {
         defi: '',
         raison: '',
         det_raison: '',
-        attent: '',
+        attente: '',
         det_attentes: ''
     })
 
@@ -87,8 +91,44 @@ function Form() {
 
     const skipDisplay = () => {
         if (page > 2){                        
-            return <button className='skip'>SKIP</button>
+            return <button type='button' name='register' value='skip' className='skip'
+            onClick={() => submitRegistration(formData)}>SKIP</button>
         }
+    }
+
+    function submitRegistration(data) {
+        // Vérification
+        let infos = {
+            username: data.email,
+            password: data.password,
+            sexe:data.gender,
+            age: data.age,
+            first_name:data.first_name,
+            last_name:data.last_name,
+            ville:data.ville,
+            obj_court: data.obj_court,
+            obj_long: data.obj_long,
+            defi: data.defi,
+            frequence: data.frequence,
+        }
+        console.log(infos, typeof(infos.age))
+
+        axios.post("http://127.0.0.1:8000/api/register", infos)
+
+        // axios.post("http://127.0.0.1:8000/api/register", to_post, {headers:{"Content-Type" : "application/json"}})
+        // .catch((err) => console.log(err))
+        // // ).then(function(res) {
+        //   axios.post(
+        //     "/api/login",
+        //     {
+        //       username: data.email,
+        //       password: data.password
+        //     }
+        //   ).then(function(res) {
+        //     setCurrentUser(true);
+        //   });
+        // });
+        // console.log(data, to_post)
     }
 
     return (
@@ -96,7 +136,7 @@ function Form() {
             <div className='progressbar'>
                 <div className='progress' style={{width: 100*page/(Titles.length-1) + "%"}}>&nbsp;</div>
             </div>
-            <div className='form-container'>
+            <form className='form-container'>
                 <div className='header'>
                     <span>
                         <h1>{Titles[page]}</h1>
@@ -110,15 +150,14 @@ function Form() {
                 </div>
 
                 <div className='footer'>
-                    <button className='previous'
+                    <button className='previous' name='register' value='previous' type='button'
                     disabled={page===0}
                     onClick={() => setPage(page - 1)}
                     >Précédent</button>
-                    <button className='next'
+                    <button className='next' name='register' value='finish' type='button'
                     onClick={() => {
                         if (page === (Titles.length - 1)) {
-                            alert("Terminé")
-                            console.log(formData)
+                            submitRegistration(formData)
                         } else {
                             setPage(page + 1)
                         }
@@ -126,7 +165,7 @@ function Form() {
                     {page === (Titles.length - 1) ? "Terminer" : "Suivant"}
                     </button>
                 </div>
-            </div>            
+            </form>            
         </div>
     )
 }

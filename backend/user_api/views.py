@@ -1,17 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework import permissions, status
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.response import Response
 
 from user_api.models import Sport
-from .serializers import SportSerializer, UserRegisterSerializer, UserLoginSerializer, UserSerializer
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
 from django.contrib.auth import login, logout
-
-from user_api import serializers
 
 
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny,)
+    authentication_classes = (BasicAuthentication,)
     
     def post(self, request):
         data = request.data 
@@ -21,8 +20,8 @@ class UserRegister(APIView):
         serializer = UserRegisterSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.create(data)
-            if user is not None:
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # if user is not None:
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -62,11 +61,18 @@ class UserView(APIView):
     
 
 class SportView(APIView):
-     permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (BasicAuthentication,)
 
-     def get(self, request):
+    def get(self, request):
         output = [
             {'abrev': sport.abrev, 'name': sport.name, 'icon_url': sport.icon_url} 
             for sport in Sport.objects.all()
         ]
         return Response(output, status=status.HTTP_200_OK)
+    
+    # def post(self, request):
+    #     serializer = SportSerializer(data=request.data)
+    #     if serializer.is_valid(raise_exception=True):
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)

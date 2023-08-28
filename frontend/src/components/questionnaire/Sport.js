@@ -37,7 +37,7 @@ function Sport({ formData, setFormData }) {
     return (
         <div className='questionnaire-sport form-body'>
             <SpanSports sports={formData.sports}/>
-            <select name="select-frenquecy">
+            <select name="select-frenquecy" value={formData.frequence} onChange={(event) => setFormData({...formData, frequence: event.target.value})}>
                 <option defaultValue={true} hidden>Fréquence d'entraînement</option>
                 <option value="tlj">Tous le jours</option>
                 <option value="tet">De temps en temps</option>
