@@ -7,10 +7,8 @@ import Questions from './Questions'
 import axios from 'axios'
 
 
-
 function Form() {
     const [page, setPage] = useState(0)
-    const [sports, setSports] = useState([])
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -19,7 +17,7 @@ function Form() {
         last_name: '',
         age: '',
         gender: '',
-        sports: {},
+        sports: [],
         frequence: '',
         ville: '',
         obj_court: '',
@@ -31,27 +29,31 @@ function Form() {
         det_attentes: ''
     })
 
-    useEffect(() => {
-        const getSportsApi = async () => {
-            await axios.get('http://127.0.0.1:8000/api/sports')
-            .then(res => setSports(res.data))
-            .catch(err => console.log(err))
-        } 
-        getSportsApi()
-    }, []) 
-
-    const setSportsList = () => {
+    const setSportsList = (sportsData) => {
         let sportsList = []
-        for (let i in sports) {
-            sportsList[[sports[i].abrev]] = {
-                name: sports[i].name,
-                icon_url: sports[i].icon_url,
+        for (let i in sportsData) {
+            sportsList[[sportsData[i].abrev]] = {
+                name: sportsData[i].name,
+                icon_url: sportsData[i].icon_url,
                 checked: false,
             } 
         }
         setFormData({...formData, sports: sportsList})
-    }
-    
+    }   
+
+    useEffect(() => {
+        const getSportsApi = async () => {
+            await axios.get('http://127.0.0.1:8000/api/sports')
+            .then((res) => {
+                if (formData.sports.length === 0) {
+                    setSportsList(res.data)
+                }
+            }) 
+            .catch(err => console.log(err))
+        }
+        getSportsApi()
+    }, [])
+
     const Titles = ["Créez votre compte", "Informations personnelles", "Pratique sportive", "Objectifs", "Questionnaire"]
     const Desc = [
         " ", 
@@ -119,7 +121,6 @@ function Form() {
                             console.log(formData)
                         } else {
                             setPage(page + 1)
-                            setSportsList()
                         }
                     }}>
                     {page === (Titles.length - 1) ? "Terminer" : "Suivant"}

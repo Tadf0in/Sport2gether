@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Sport({ formData, setFormData }) {
+function Sport({ formData, setFormData }) { 
 
     const SpanSport = ({ abrev, complet, isChecked }) => {
         return (
@@ -23,7 +23,6 @@ function Sport({ formData, setFormData }) {
         )
     }
     const SpanSports = ({sports}) => {
-        console.log(sports)
         return (
             <div className='span-sports'>{
                 Object.keys(sports).map((sport, i) => {

@@ -70,9 +70,3 @@ class SportView(APIView):
             for sport in Sport.objects.all()
         ]
         return Response(output, status=status.HTTP_200_OK)
-     
-     def post(self, request):
-          serializer = SportSerializer(data=request.data)
-          if serializer.is_valid(raise_exception=True):
-               serializer.save()
-               return Response(serializer.data, status=status.HTTP_201_CREATED)
