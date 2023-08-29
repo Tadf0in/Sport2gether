@@ -60,7 +60,7 @@ function Form() {
 
     const Titles = ["Créez votre compte", "Informations personnelles", "Pratique sportive", "Objectifs", "Questionnaire"]
     const Desc = [
-        " ", 
+        ".", 
         "Qui êtes vous ?", 
         "Nous vous mettrons en relation avec des personnes qui pratiquent le même sport que vous", 
         "Dites nous en plus sur ce que vous recherchez", 
@@ -89,60 +89,27 @@ function Form() {
         }
     }
 
+    function submitRegistration(data) {
+        // Vérification
+        axios.post("http://127.0.0.1:8000/api/register", data)
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err))
+    }
+    
     const skipDisplay = () => {
         if (page > 2){                        
-            return <button type='button' name='register' value='skip' className='skip'
+            return <button type='button' name='register' value='skip' className='btn btn-secondary'
             onClick={() => submitRegistration(formData)}>SKIP</button>
         }
     }
 
-    function submitRegistration(data) {
-        // Vérification
-        let infos = {
-            username: data.email,
-            password: data.password,
-            sexe:data.gender,
-            age: data.age,
-            first_name:data.first_name,
-            last_name:data.last_name,
-            ville:data.ville,
-            obj_court: data.obj_court,
-            obj_long: data.obj_long,
-            defi: data.defi,
-            frequence: data.frequence,
-            raison: data.raison,
-            det_raison: data.det_raison,
-            attente: data.attente,
-            det_attentes: data.det_attentes,
-            sports: data.sports
-        }
-        console.log(infos, typeof(infos.age))
-
-        axios.post("http://127.0.0.1:8000/api/register", infos)
-
-        // axios.post("http://127.0.0.1:8000/api/register", to_post, {headers:{"Content-Type" : "application/json"}})
-        // .catch((err) => console.log(err))
-        // // ).then(function(res) {
-        //   axios.post(
-        //     "/api/login",
-        //     {
-        //       username: data.email,
-        //       password: data.password
-        //     }
-        //   ).then(function(res) {
-        //     setCurrentUser(true);
-        //   });
-        // });
-        // console.log(data, to_post)
-    }
-
     return (
-        <div className='form'>
-            <div className='progressbar'>
-                <div className='progress' style={{width: 100*page/(Titles.length-1) + "%"}}>&nbsp;</div>
+        <div className='form' id='form'>
+            <div className='progress'>
+                <div className='progress-bar'  role="progressbar" style={{width: 100*page/(Titles.length-1) + "%"}}>&nbsp;</div>
             </div>
             <form className='form-container'>
-                <div className='header'>
+                <div className='form-header'>
                     <span>
                         <h1>{Titles[page]}</h1>
                         {skipDisplay()}
@@ -150,16 +117,14 @@ function Form() {
                     <h4>{Desc[page]}</h4>
                 </div>
 
-                <div className='body'>
-                    {pageDisplay()}
-                </div>
+                {pageDisplay()}
 
-                <div className='footer'>
-                    <button className='previous' name='register' value='previous' type='button'
+                <div className='form-footer'>
+                    <button className='btn btn-primary' name='register' value='previous' type='button'
                     disabled={page===0}
                     onClick={() => setPage(page - 1)}
                     >Précédent</button>
-                    <button className='next' name='register' value='finish' type='button'
+                    <button className='btn btn-primary' name='register' value='finish' type='button'
                     onClick={() => {
                         if (page === (Titles.length - 1)) {
                             submitRegistration(formData)

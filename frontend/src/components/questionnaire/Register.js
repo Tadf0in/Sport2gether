@@ -1,11 +1,12 @@
 import React from 'react'
+import Input from './Fields'
 
 function Register({ formData, setFormData }) {
   return (
-    <div className='questionnaire-register form-body'>
-        <input type='email' placeholder='Adresse mail' value={formData.email} onChange={(event) => setFormData({...formData, email: event.target.value})}/>
-        <input type='password' placeholder='Mot de passe' value={formData.password} onChange={(event) => setFormData({...formData, password: event.target.value})}/>
-        <input type='password' placeholder='Répétez le mot de passe' value={formData.confirm_pass} onChange={(event) => setFormData({...formData, confirm_pass: event.target.value})}/>
+    <div className='form-body'>
+        <Input type='email' placeholder='johndoe@example.com' dataName='email' formData={formData} setFormData={setFormData}>Email :</Input>
+        <Input type='password' placeholder='Mot de passe..' dataName='password' formData={formData} setFormData={setFormData}>Mot de passe :</Input>
+        <Input type='password' placeholder='Mot de passe..' dataName='confirm_pass' formData={formData} setFormData={setFormData}>Répétez le mot de passe :</Input>
     </div>
   )
 }

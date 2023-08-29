@@ -10,12 +10,12 @@ user_model = get_user_model()
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_model
-        fields = ['username', 'password']
+        fields = ['email', 'password']
 
     def create(self, infos):
         new_user = user_model.objects.create_user(
-            username = infos['username'], 
-            email = infos['username'], 
+            username = infos['email'], 
+            email = infos['email'], 
             password = infos['password'],
             )
         new_user.save()
@@ -23,7 +23,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         new_appuser = AppUser()
         new_appuser.user_id = new_user       
         new_appuser.age = int(infos['age'])
-        new_appuser.sexe = infos['sexe']
+        new_appuser.sexe = infos['gender']
         new_appuser.ville = infos['ville']
 
         new_appuser.objectif_court_terme = infos['obj_court']
@@ -81,10 +81,4 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = user_model
-        fields = '__all__'
-
-        
-class SportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Sport
         fields = '__all__'

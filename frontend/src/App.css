@@ -1,128 +1,20 @@
-.App {
-  text-align: center;
+/*
+
+.span-gender {
+
+} 
+
+.span-sport {
+
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+*/
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+body {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
-.form {
-  width: 80%;
-  margin-left: 10%;
-  height: 100vh;
-}
-.progressbar {
-  margin-top: 20px;
-  height: 20px;
-  background-color: #eee;
-  border-radius: 50px 0 50px 0;
-}
-.progress {
-  background-color: green;
-  height: 20px;
-  border-radius: 50px 0 50px 0;
-}
-.form-container {  
-  margin-top: 20px;
-  height: 80%;
-}
-
-.form .header {
-  height: 20%;
-}
-.form .header span {
-  display: flex;
-  align-items: center;
-}
-.form .header h1 {
-  font-size: 20px;
-  text-align: left;
-  width: 85%;
-}
-.form .header .skip {
-  width: 15%;
-  height: 20px;
-  text-align: right;
-}
-.form .header h4 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  height: 20px;
-}
-
-.form .body {
-  height: 60%;
-}
-.form-body {
-  display: flex;
-  flex-direction: column;
-}
-
-.form input {
-  height: 20px;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 15px;
-}
-.form select {
-  border-radius: 15px;
-  padding-left: 10px;
-  height: 40px;
-}
-
-.span-sports {
-  display: flex;
-  flex-direction: column;
-  height: 80px;
-  overflow-y: scroll;
-}
-
-.form .footer {
-  height: 20%;
-}
-.form .footer button {
-  width: 150px;
-  max-width: 40%;
-  height: 50px;
-  margin: 0 5%;
-}
-.previous {
-  border-radius: 10px 0 0 10px;
-}
-.next {
-  border-radius: 0 10px 10px 0;
+#form {
+  width: 90vw;
+  max-width: 500px;
 }

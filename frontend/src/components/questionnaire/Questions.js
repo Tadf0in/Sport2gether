@@ -1,24 +1,29 @@
 import React from 'react'
+import { Textarea } from './Fields'
 
 function Questions({ formData, setFormData }) {
   return (
-    <div className='questionnaire-questions form-body'>
+    <div className='form-body'>
         <label>Comment avez vous trouver l'appli</label>
-        <select name="select-raison" value={formData.raison} onChange={(event) => setFormData({...formData, raison: event.target.value})}>
+        <select name="select-raison"  className='form-select'
+        value={formData.raison} 
+        onChange={(event) => setFormData({...formData, raison: event.target.value})}>
             <option value="ami">Un ami m'en a parlé</option>
             <option value="pub">Une publicité</option>
             <option value="app">Depuis le Play Store</option>
             <option value="oth">...</option>
         </select>
-        <textarea placeholder="Plus de détails" value={formData.det_raison} onChange={(event) => setFormData({...formData, det_raison: event.target.value})}></textarea>
+        <Textarea dataName='det_raison' formData={formData} setFormData={setFormData}>Plus de détails :</Textarea>
 
         <label>Qu'attendez vous de l'appli</label>
-        <select name="select-raison" value={formData.attente} onChange={(event) => setFormData({...formData, attente: event.target.value})}>
-            <option value="ren">Des rencontres</option>
-            <option value="mot">Motivation</option>
+        <select name="select-raison" className='form-select' 
+        value={formData.attente} 
+        onChange={(event) => setFormData({...formData, attente: event.target.value})}>
+            <option value="ren">Faire des rencontres</option>
+            <option value="mot">Trouver de la motivation</option>
             <option value="oth">...</option>
         </select>
-        <textarea placeholder="Plus de détails" value={formData.det_attentes} onChange={(event) => setFormData({...formData, det_attentes: event.target.value})}></textarea>
+        <Textarea dataName='det_attentes' formData={formData} setFormData={setFormData}>Plus de détails :</Textarea>
     </div>
   )
 }
