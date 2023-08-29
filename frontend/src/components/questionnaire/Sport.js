@@ -1,26 +1,27 @@
 import React from 'react'
 import Input from './Fields'
 
+const sportValidation = (formData) => {
+    if (formData.frequence !== '') {
+        if (formData.ville !== '') {
+            return true
+        } else {
+            // throw new Error("Le champ Ville est requis")
+            return false
+        }
+    } else {
+        // throw new Error("Veuillez choisir une fréquence d'entraînement")
+        return false
+    }
+}
+
+
 function Sport({ formData, setFormData }) { 
 
     const SpanSport = ({ abrev, complet, isChecked }) => {
         return (
-            // <span className='span-sport'>
-            //     <input type='checkbox' id={abrev} checked={isChecked} 
-            //     onChange={(event) => {setFormData({
-            //         ...formData, sports: {
-            //             ...formData.sports, [abrev]: {
-            //                 abrev: abrev,
-            //                 name: complet,
-            //                 checked: event.target.checked
-            //             }
-            //         }
-            //     })}}/>
-            //     <label htmlFor={abrev}>{complet}</label>
-            // </span>
-
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value={complet} id={abrev} checked={isChecked}
+            <div className="form-check">
+                <input className="form-check-input" type="checkbox" value={complet} id={abrev} checked={isChecked}
                 onChange={(event) => {
                     setFormData({
                     ...formData, sports: {
@@ -31,7 +32,7 @@ function Sport({ formData, setFormData }) {
                         }
                     }
                 })}}/>
-                <label class="form-check-label" htmlFor={abrev}>
+                <label className="form-check-label" htmlFor={abrev}>
                     {complet}
                 </label>
             </div>
@@ -67,3 +68,4 @@ function Sport({ formData, setFormData }) {
 }
 
 export default Sport
+export {sportValidation}

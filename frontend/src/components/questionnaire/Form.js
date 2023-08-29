@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import Register from './Register'
-import Infos from './Infos'
-import Sport from './Sport'
+import Register, {registerValidation} from './Register'
+import Infos, {infosValidation} from './Infos'
+import Sport, {sportValidation} from './Sport'
 import Objectifs from './Objectifs'
 import Questions from './Questions'
 import axios from 'axios'
@@ -13,6 +13,7 @@ axios.defaults.withCredentials = true;
 
 function Form() {
     const [page, setPage] = useState(0)
+    const [nextButton, setNextButton] = useState(false)
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -89,17 +90,43 @@ function Form() {
         }
     }
 
-    function submitRegistration(data) {
-        // Vérification
-        axios.post("http://127.0.0.1:8000/api/register", data)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err))
+    const formPageValidation = () => {
+        switch (page) {
+            case 0:
+                return registerValidation(formData)
+                break
+            case 1:
+                return infosValidation(formData)
+                break
+            case 2:
+                return sportValidation(formData)
+                break
+            case 3:
+                return true
+                break
+            case 4:
+                return true
+        }
+    }
+
+    useEffect(() => {
+        setNextButton(formPageValidation())
+    }, [formData])
+
+    const  submitRegistration = (e) => {
+        console.log(formData)
+        console.log(e)
+        e.preventDefault()
+        // axios.post("http://127.0.0.1:8000/api/register", formData)
+        // .then((res) => console.log(res))
+        // .catch((err) => console.log(err))
     }
     
     const skipDisplay = () => {
         if (page > 2){                        
             return <button type='button' name='register' value='skip' className='btn btn-secondary'
-            onClick={() => submitRegistration(formData)}>SKIP</button>
+            onClick={() => submitRegistration(formData)}
+            >SKIP</button>
         }
     }
 
@@ -121,15 +148,20 @@ function Form() {
 
                 <div className='form-footer'>
                     <button className='btn btn-primary' name='register' value='previous' type='button'
-                    disabled={page===0}
+                    hidden={page===0}
                     onClick={() => setPage(page - 1)}
                     >Précédent</button>
+                    
                     <button className='btn btn-primary' name='register' value='finish' type='button'
+                    disabled={!nextButton}
                     onClick={() => {
-                        if (page === (Titles.length - 1)) {
-                            submitRegistration(formData)
-                        } else {
-                            setPage(page + 1)
+                        if (formPageValidation()) {
+                            if (page === (Titles.length - 1)) {
+                            submitRegistration()
+                            } else {
+                                setPage(page + 1)
+                                setNextButton(formPageValidation())
+                            }
                         }
                     }}>
                     {page === (Titles.length - 1) ? "Terminer" : "Suivant"}

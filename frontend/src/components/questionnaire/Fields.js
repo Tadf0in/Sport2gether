@@ -1,12 +1,13 @@
 import React from 'react'
 
-function Input({ type, placeholder, dataName, children, formData, setFormData}) {
+function Input({ type, placeholder, dataName, errorMsg, children, formData, setFormData}) {
   return (
     <div className="form-floating mb-3">
-        <input type={type} placeholder={placeholder} value={formData[dataName]} 
+        <input type={type} placeholder={placeholder} value={formData[dataName]}
         className='form-control' id={dataName + 'forminput'}
         onChange={(event) => setFormData({...formData, [dataName]: event.target.value})}/>
         <label htmlFor={dataName + 'forminput'} className="form-label">{children}</label>
+        <span>{errorMsg}</span>
     </div>
   )
 }

@@ -1,6 +1,35 @@
 import React from 'react'
 import Input from './Fields'
 
+const infosValidation = (formData) => {
+  if (formData.first_name !== '') {
+    if (formData.last_name !== '') {
+      if (formData.age !== '') {
+        if (formData.age*1 >= 13) {
+          if (formData.gender !== '') {
+            return true
+          } else {
+              // throw new Error("Le champ genre est requis")
+              return false
+            }
+          } else {
+              // throw new Error("L'âge minimum requis est de 13ans")
+              return false
+        }
+      } else {
+          // throw new Error("Le champ âge est requis")
+          return false
+      }
+    } else {
+        // throw new Error("Le champ nom est requis")
+        return false
+    }
+  } else {
+      // throw new Error("Le champ prénom est requis")
+      return false
+  }
+}
+
 function Infos({ formData, setFormData }) {
   return (
     <div className='form-body'>
@@ -29,3 +58,4 @@ function Infos({ formData, setFormData }) {
 }
 
 export default Infos
+export {infosValidation}
