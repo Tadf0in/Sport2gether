@@ -4,7 +4,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.response import Response
 
 from user_api.models import Sport
-from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, SportSerializer
 from django.contrib.auth import login, logout
 
 
@@ -20,8 +20,8 @@ class UserRegister(APIView):
         serializer = UserRegisterSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.create(data)
-            # if user is not None:
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if user is not None:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -65,11 +65,9 @@ class SportView(APIView):
     authentication_classes = (BasicAuthentication,)
 
     def get(self, request):
-        output = [
-            {'abrev': sport.abrev, 'name': sport.name, 'icon_url': sport.icon_url} 
-            for sport in Sport.objects.all()
-        ]
-        return Response(output, status=status.HTTP_200_OK)
+        sports = Sport.objects.all()
+        serializer = SportSerializer(sports, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     # def post(self, request):
     #     serializer = SportSerializer(data=request.data)

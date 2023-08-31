@@ -7,35 +7,30 @@ const infosValidation = (formData) => {
       if (formData.age !== '') {
         if (formData.age*1 >= 13) {
           if (formData.gender !== '') {
-            return true
-          } else {
-              // throw new Error("Le champ genre est requis")
-              return false
-            }
-          } else {
-              // throw new Error("L'âge minimum requis est de 13ans")
-              return false
+            return 'OK'
+          }
+          } else if (formData.age !== '') {
+              return 'youngError'
         }
-      } else {
-          // throw new Error("Le champ âge est requis")
-          return false
       }
-    } else {
-        // throw new Error("Le champ nom est requis")
-        return false
     }
-  } else {
-      // throw new Error("Le champ prénom est requis")
-      return false
   }
 }
 
 function Infos({ formData, setFormData }) {
+  const error = infosValidation(formData)
+
   return (
     <div className='form-body'>
-        <Input type='text' placeholder='John' dataName='first_name' formData={formData} setFormData={setFormData}>Prénom :</Input>
-        <Input type='text' placeholder='Doe' dataName='last_name' formData={formData} setFormData={setFormData}>Nom :</Input>
-        <Input type='number' placeholder='18' dataName='age' formData={formData} setFormData={setFormData}>Âge :</Input>
+        <Input type='text' placeholder='John' dataName='first_name'
+        formData={formData} setFormData={setFormData}>Prénom :</Input>
+
+        <Input type='text' placeholder='Doe' dataName='last_name'
+        formData={formData} setFormData={setFormData}>Nom :</Input>
+        
+        <Input type='number' placeholder='18' dataName='age' 
+        error={(error === 'youngError') ? {message: "L'âge minimum requis est de 13 ans", style:{borderColor: 'red'}} : ''} 
+        formData={formData} setFormData={setFormData}>Âge :</Input>
 
         <div className='span-gender'>
           <div className='form-check'>
@@ -52,8 +47,6 @@ function Infos({ formData, setFormData }) {
           </div>
         </div>
     </div>
-
-    
   )
 }
 

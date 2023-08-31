@@ -82,3 +82,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_model
         fields = '__all__'
+
+
+class SportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sport
+        fields = '__all__'

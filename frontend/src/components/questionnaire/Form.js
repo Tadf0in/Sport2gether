@@ -13,7 +13,6 @@ axios.defaults.withCredentials = true;
 
 function Form() {
     const [page, setPage] = useState(0)
-    const [nextButton, setNextButton] = useState(false)
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -72,19 +71,14 @@ function Form() {
         switch (page) {
             case 0:
                 return <Register formData={formData} setFormData={setFormData}/>
-                break
             case 1:
                 return <Infos formData={formData} setFormData={setFormData}/>
-                break
             case 2:
                 return <Sport formData={formData} setFormData={setFormData}/>
-                break
             case 3:
                 return <Objectifs formData={formData} setFormData={setFormData}/>
-                break
             case 4:
                 return <Questions formData={formData} setFormData={setFormData}/>
-                break
             default:
                 throw new Error('Page de questionnaire inconnue')
         }
@@ -93,41 +87,29 @@ function Form() {
     const formPageValidation = () => {
         switch (page) {
             case 0:
-                return registerValidation(formData)
-                break
+                return registerValidation(formData) === 'OK'
             case 1:
-                return infosValidation(formData)
-                break
+                return infosValidation(formData) === 'OK'
             case 2:
-                return sportValidation(formData)
-                break
+                return sportValidation(formData) === 'OK'
             case 3:
                 return true
-                break
             case 4:
                 return true
+            default:
+                return false
         }
     }
 
-    useEffect(() => {
-        setNextButton(formPageValidation())
-    }, [formData])
-
-    const  submitRegistration = (e) => {
+    const submitRegistration = (e) => {
+        e.preventDefault()
+        console.log(e.target)
+        // if (e.target.name === '')
         console.log(formData)
         console.log(e)
-        e.preventDefault()
         // axios.post("http://127.0.0.1:8000/api/register", formData)
         // .then((res) => console.log(res))
         // .catch((err) => console.log(err))
-    }
-    
-    const skipDisplay = () => {
-        if (page > 2){                        
-            return <button type='button' name='register' value='skip' className='btn btn-secondary'
-            onClick={() => submitRegistration(formData)}
-            >SKIP</button>
-        }
     }
 
     return (
@@ -135,11 +117,11 @@ function Form() {
             <div className='progress'>
                 <div className='progress-bar'  role="progressbar" style={{width: 100*page/(Titles.length-1) + "%"}}>&nbsp;</div>
             </div>
-            <form className='form-container'>
+            <form className='form-container' method='POST' onSubmit={submitRegistration}>
                 <div className='form-header'>
                     <span>
                         <h1>{Titles[page]}</h1>
-                        {skipDisplay()}
+                            <button hidden={page < 3} type='submit' name='register' value='skip' className='btn btn-secondary'>SKIP</button>
                     </span>
                     <h4>{Desc[page]}</h4>
                 </div>
@@ -147,25 +129,15 @@ function Form() {
                 {pageDisplay()}
 
                 <div className='form-footer'>
-                    <button className='btn btn-primary' name='register' value='previous' type='button'
-                    hidden={page===0}
-                    onClick={() => setPage(page - 1)}
-                    >Précédent</button>
-                    
-                    <button className='btn btn-primary' name='register' value='finish' type='button'
-                    disabled={!nextButton}
-                    onClick={() => {
-                        if (formPageValidation()) {
-                            if (page === (Titles.length - 1)) {
-                            submitRegistration()
-                            } else {
-                                setPage(page + 1)
-                                setNextButton(formPageValidation())
-                            }
-                        }
-                    }}>
-                    {page === (Titles.length - 1) ? "Terminer" : "Suivant"}
-                    </button>
+                    <button className='btn btn-primary' name='page' value='previous' type='button'
+                    hidden={page===0} onClick={() => setPage(page - 1)}>Précédent</button>
+
+                    <button className='btn btn-primary' name='register' value='next' type='button'
+                    disabled={!formPageValidation()} onClick={() => {setPage(page + 1)}} 
+                    hidden={page === Titles.length - 1}>Suivant</button>
+
+                    <button className='btn btn-primary' name='page' value='finish' type='submit' 
+                    hidden={page !== Titles.length - 1}>Terminer</button>
                 </div>
             </form>            
         </div>

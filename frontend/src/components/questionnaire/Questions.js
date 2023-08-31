@@ -13,7 +13,7 @@ function Questions({ formData, setFormData }) {
             <option value="app">Depuis le Play Store</option>
             <option value="oth">...</option>
         </select>
-        <Textarea dataName='det_raison' formData={formData} setFormData={setFormData}>Plus de détails :</Textarea>
+        <Textarea dataName='det_raison' error='' formData={formData} setFormData={setFormData}>Plus de détails :</Textarea>
 
         <label>Qu'attendez vous de l'appli</label>
         <select name="select-raison" className='form-select' 
@@ -23,7 +23,7 @@ function Questions({ formData, setFormData }) {
             <option value="mot">Trouver de la motivation</option>
             <option value="oth">...</option>
         </select>
-        <Textarea dataName='det_attentes' formData={formData} setFormData={setFormData}>Plus de détails :</Textarea>
+        <Textarea dataName='det_attentes' error='' formData={formData} setFormData={setFormData}>Plus de détails :</Textarea>
     </div>
   )
 }

@@ -19,3 +19,14 @@ body {
   width: 90vw;
   max-width: 500px;
 }
+
+.field-error {
+  color: red
+}
+.textinput:invalid {
+  border-color: red;
+}
+
+.textinput {
+  background-color: black;
+}

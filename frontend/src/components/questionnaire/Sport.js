@@ -4,19 +4,14 @@ import Input from './Fields'
 const sportValidation = (formData) => {
     if (formData.frequence !== '') {
         if (formData.ville !== '') {
-            return true
-        } else {
-            // throw new Error("Le champ Ville est requis")
-            return false
+            return 'OK'
         }
-    } else {
-        // throw new Error("Veuillez choisir une fréquence d'entraînement")
-        return false
     }
 }
 
 
 function Sport({ formData, setFormData }) { 
+    const error = sportValidation(formData)
 
     const SpanSport = ({ abrev, complet, isChecked }) => {
         return (
@@ -36,7 +31,6 @@ function Sport({ formData, setFormData }) {
                     {complet}
                 </label>
             </div>
-
         )
     }
     const SpanSports = ({sports}) => {
@@ -62,7 +56,9 @@ function Sport({ formData, setFormData }) {
                 <option value="tet">De temps en temps</option>
                 <option value="var">Variable</option>
             </select>
-            <Input type='text' placeholder='Adresse ou ville' dataName='ville' formData={formData} setFormData={setFormData}>Ville :</Input>
+            
+            <Input type='text' placeholder='Adresse ou ville' dataName='ville'
+            formData={formData} setFormData={setFormData}>Ville :</Input>
         </div>
     )
 }
