@@ -17,7 +17,7 @@ function Sport({ formData, setFormData }) {
         return (
             <div className="form-check">
                 <input className="form-check-input" type="checkbox" value={complet} id={abrev} checked={isChecked}
-                onChange={(event) => {
+                onKeyDown={e => e.preventDefault()} onChange={(event) => {
                     setFormData({
                     ...formData, sports: {
                         ...formData.sports, [abrev]: {

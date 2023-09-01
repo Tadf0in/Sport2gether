@@ -1,9 +1,16 @@
 import React from 'react'
 
 function Input({ type, placeholder, dataName, error='', children, formData, setFormData}) {
+
+  const preventSubmit = (e) => {
+    if (e.code === 'Enter') {
+      e.preventDefault()
+    }
+  } 
+
   return (
     <div className="form-floating mb-3">
-        <input type={type} placeholder={placeholder} value={formData[dataName]}
+        <input type={type} placeholder={placeholder} value={formData[dataName]} onKeyDown={preventSubmit}
         className='form-control textinput' id={dataName + 'forminput'} style={error.style}
         onChange={(event) => setFormData({...formData, [dataName]: event.target.value})}/>
         <label htmlFor={dataName + 'forminput'} className="form-label">{children}</label>
