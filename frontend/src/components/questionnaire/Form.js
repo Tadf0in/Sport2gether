@@ -18,7 +18,7 @@ function Form() {
         last_name: '',
         age: '',
         gender: '',
-        sports: [],
+        sports: {},
         frequence: '',
         ville: '',
         obj_court: '',
@@ -30,30 +30,18 @@ function Form() {
         det_attentes: ''
     })
 
-    const setSportsList = (sportsData) => {
-        let sportsList = []
-        for (let i in sportsData) {
-            sportsList[[sportsData[i].abrev]] = {
-                name: sportsData[i].name,
-                icon_url: sportsData[i].icon_url,
-                checked: false,
-            } 
-        }
-        setFormData({...formData, sports: sportsList})
-    }   
-
-    useEffect(() => {
-        const getSportsApi = async () => {
-            await client.get('/api/sports')
-            .then((res) => {
-                if (formData.sports.length === 0) {
-                    setSportsList(res.data)
-                }
-            }) 
-            .catch(err => console.log(err))
-        }
-        getSportsApi()
-    }, [])
+    // const setSportsList = (sportsData) => {
+    //     console.log(sportsData)
+    //     let sportsList = []
+    //     for (let i in sportsData) {
+    //         sportsList[[sportsData[i].abrev]] = {
+    //             name: sportsData[i].name,
+    //             icon_url: sportsData[i].icon_url,
+    //             checked: false,
+    //         } 
+    //     }
+    //     setFormData({...formData, sports: sportsList})
+    // }   
 
     const Titles = ["Créez votre compte", "Informations personnelles", "Pratique sportive", "Objectifs", "Questionnaire"]
     const Desc = [
@@ -83,9 +71,11 @@ function Form() {
 
     const alertDisplay = () => {
         if (alert !== '' && page === 0) {
-            return <div className="alert alert-danger" role="alert">
-                        {alert}
-                    </div>
+            return (
+                <div className="alert alert-danger" role="alert">
+                    {alert}
+                </div>
+            )
         }
     }
 
@@ -132,6 +122,7 @@ function Form() {
         })
     }
 
+    console.log(formData.sports)
     return (
         <div className='form' id='form'>
             <div className='progress'>

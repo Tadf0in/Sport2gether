@@ -26,6 +26,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         new_appuser.sexe = infos['gender']
         new_appuser.ville = infos['ville']
 
+
+        new_appuser.first_name = infos['first_name']
+        new_appuser.last_name = infos['last_name']
+
         new_appuser.objectif_court_terme = infos['obj_court']
         new_appuser.objectif_long_terme = infos['obj_long']
         new_appuser.plus_gros_defi_releve = infos['defi']

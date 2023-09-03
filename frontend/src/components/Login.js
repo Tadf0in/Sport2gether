@@ -16,8 +16,7 @@ function Login() {
             password: password
         })
         .then((res) => {
-            // navigate('/user')
-            console.log(res)
+            navigate('/user')
         })
         .catch((err) => {
             console.log(err)

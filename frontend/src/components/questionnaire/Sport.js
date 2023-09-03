@@ -1,5 +1,6 @@
-import React from 'react'
-import Input from './Fields'
+import React, {useState, useEffect} from 'react'
+import Input, {Loading} from './Fields'
+import { client } from '../../App'
 
 const sportValidation = (formData) => {
     if (formData.frequence !== '') {
@@ -9,58 +10,76 @@ const sportValidation = (formData) => {
     }
 }
 
+function Sport({ formData, setFormData }) {
+    const [sports, setSports] = useState([])
 
-function Sport({ formData, setFormData }) { 
-    const error = sportValidation(formData)
+    useEffect(() => {
+        const getSportsApi = async () => {
+            await client.get('/api/sports')
+            .then((res) => {
+                setSports(res.data)
+            }) 
+            .catch(err => console.log(err))
+        }
+        getSportsApi()
+    }, [])
 
-    const SpanSport = ({ abrev, complet, isChecked }) => {
-        return (
-            <div className="form-check">
-                <input className="form-check-input" type="checkbox" value={complet} id={abrev} checked={isChecked}
-                onKeyDown={e => e.preventDefault()} onChange={(event) => {
-                    setFormData({
-                    ...formData, sports: {
-                        ...formData.sports, [abrev]: {
-                            abrev: abrev,
-                            name: complet,
-                            checked: event.target.checked
-                        }
-                    }
-                })}}/>
-                <label className="form-check-label" htmlFor={abrev}>
-                    {complet}
-                </label>
-            </div>
-        )
+    const SpanSport = (sport, checked) => {
+        if (sports.length === 0) {
+            return <Loading />
+        } else {
+            return (
+                <div className="form-check">
+                    <input className="form-check-input" type="checkbox" value={sport.abrev} id={sport.id} 
+                    checked={checked} onKeyDown={e => e.preventDefault()} 
+                    onChange={(event) => {
+                        setFormData({
+                            ...formData, sports: {
+                                ...formData.sports, [sport.abrev]: event.target.checked
+                            }
+                        })
+                    }}
+                />
+                    <label className="form-check-label" htmlFor={sport.id}>
+                        {sport.name}
+                    </label>
+                </div>
+            )
+        }
     }
     const SpanSports = ({sports}) => {
         return (
             <div className='span-sports'>{
                 Object.keys(sports).map((sport, i) => {
+                    
                     return (
-                        <SpanSport abrev={sport} key={i} complet={sports[sport].name} isChecked={sports[sport].checked} />
+                        <SpanSport sport={sport} key={i} checked={formData.sports[[sport.abrev]]} />
                     )
                 })}    
             </div>
         )
     }
 
-    return (
-        <div className='form-body'>
-            <SpanSports sports={formData.sports}/>
-            <select name="select-frenquecy" className='form-select'
-            value={formData.frequence} 
-            onChange={(event) => setFormData({...formData, frequence: event.target.value})}>
-                <option defaultValue={true} hidden>Fréquence d'entraînement</option>
-                <option value="tlj">Tous le jours</option>
-                <option value="tet">De temps en temps</option>
-                <option value="var">Variable</option>
-            </select>
-            
-            <Input type='text' placeholder='Adresse ou ville' dataName='ville'
-            formData={formData} setFormData={setFormData}>Ville :</Input>
-        </div>
-    )
+    if (sports.length === 0) {
+        return <Loading />
+    } else {
+        return (
+            <div className='form-body'>
+                <SpanSports sports={sports}/>
+                <select name="select-frequency" className='form-select'
+                value={formData.frequence} 
+                onChange={(event) => setFormData({...formData, frequence: event.target.value})}>
+                    <option defaultValue={true} hidden>Fréquence d'entraînement</option>
+                    <option value="tlj">Tous le jours</option>
+                    <option value="tet">De temps en temps</option>
+                    <option value="var">Variable</option>
+                </select>
+                
+                <Input type='text' placeholder='Adresse ou ville' dataName='ville'
+                formData={formData} setFormData={setFormData}>Ville :</Input>
+            </div>
+        )
+    }
 }
 
 export default Sport

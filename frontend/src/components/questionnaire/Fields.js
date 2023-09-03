@@ -34,3 +34,14 @@ function Textarea({ dataName, children, formData, setFormData }) {
 }
 
 export {Textarea}
+
+
+function Loading() {
+  return (
+    <div className="spinner-grow text-secondary" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </div>
+  )
+}
+
+export {Loading}
