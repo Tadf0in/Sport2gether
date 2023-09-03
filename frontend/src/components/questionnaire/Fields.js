@@ -3,7 +3,7 @@ import React from 'react'
 function Input({ type, placeholder, dataName, error='', children, formData, setFormData}) {
 
   const preventSubmit = (e) => {
-    if (e.code === 'Enter') {
+    if (e.keyCode === 13 || e.key === 'Enter') {
       e.preventDefault()
     }
   } 

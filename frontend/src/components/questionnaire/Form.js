@@ -13,6 +13,7 @@ axios.defaults.withCredentials = true;
 
 function Form() {
     const [page, setPage] = useState(0)
+    const [alert, setAlert] = useState('')
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -84,6 +85,18 @@ function Form() {
         }
     }
 
+    const alertDisplay = () => {
+        if (alert !== '' && page === 0) {
+            return <div class="alert alert-danger" role="alert">
+                        {alert}
+                    </div>
+        }
+    }
+
+    useEffect(() => {
+        setAlert('')
+    }, [formData.email])
+
     const formPageValidation = () => {
         switch (page) {
             case 0:
@@ -103,13 +116,21 @@ function Form() {
 
     const submitRegistration = (e) => {
         e.preventDefault()
-        console.log(e.target)
-        // if (e.target.name === '')
         console.log(formData)
-        console.log(e)
-        // axios.post("http://127.0.0.1:8000/api/register", formData)
-        // .then((res) => console.log(res))
-        // .catch((err) => console.log(err))
+        axios.post("http://127.0.0.1:8000/api/register", formData)
+        .then((res) => {
+            console.log(res)
+            // redirect login
+        })
+        .catch((err) => {
+            console.log(err)
+            if (err.response.status === 500) {
+                setAlert("Cette adresse mail est déjà utilisée")
+            } else {
+                setAlert("Une erreur est survenue, vérifiez vos informations puis réessayez")
+            }
+            setPage(0)
+        })
     }
 
     return (
@@ -117,6 +138,7 @@ function Form() {
             <div className='progress'>
                 <div className='progress-bar'  role="progressbar" style={{width: 100*page/(Titles.length-1) + "%"}}>&nbsp;</div>
             </div>
+
             <form className='form-container' method='POST' onSubmit={submitRegistration}>
                 <div className='form-header'>
                     <span>
@@ -125,15 +147,16 @@ function Form() {
                     </span>
                     <h4>{Desc[page]}</h4>
                 </div>
+                {alertDisplay()}
 
                 {pageDisplay()}
-
+                
                 <div className='form-footer'>
                     <button className='btn btn-primary' name='page' value='previous' type='button'
                     hidden={page===0} onClick={() => setPage(page - 1)}>Précédent</button>
 
                     <button className='btn btn-primary' name='register' value='next' type='button'
-                    disabled={!formPageValidation()} onClick={() => {setPage(page + 1)}} 
+                    disabled={!formPageValidation()} onClick={() => setPage(page + 1)} 
                     hidden={page === Titles.length - 1}>Suivant</button>
 
                     <button className='btn btn-primary' name='page' value='finish' type='submit' 
