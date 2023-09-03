@@ -4,11 +4,7 @@ import Infos, {infosValidation} from './Infos'
 import Sport, {sportValidation} from './Sport'
 import Objectifs from './Objectifs'
 import Questions from './Questions'
-import axios from 'axios'
-
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-axios.defaults.withCredentials = true;
+import { client } from '../../App'
 
 
 function Form() {
@@ -48,7 +44,7 @@ function Form() {
 
     useEffect(() => {
         const getSportsApi = async () => {
-            await axios.get('http://127.0.0.1:8000/api/sports')
+            await client.get('/api/sports')
             .then((res) => {
                 if (formData.sports.length === 0) {
                     setSportsList(res.data)
@@ -87,7 +83,7 @@ function Form() {
 
     const alertDisplay = () => {
         if (alert !== '' && page === 0) {
-            return <div class="alert alert-danger" role="alert">
+            return <div className="alert alert-danger" role="alert">
                         {alert}
                     </div>
         }
@@ -114,16 +110,19 @@ function Form() {
         }
     }
 
-    const submitRegistration = (e) => {
-        e.preventDefault()
+    const submitRegistration = async (e) => {
         console.log(formData)
-        axios.post("http://127.0.0.1:8000/api/register", formData)
+        console.log(JSON.stringify(formData))
+        e.preventDefault()
+
+        await client.post("/api/register", formData)
+
         .then((res) => {
             console.log(res)
             // redirect login
         })
+
         .catch((err) => {
-            console.log(err)
             if (err.response.status === 500) {
                 setAlert("Cette adresse mail est déjà utilisée")
             } else {
@@ -161,6 +160,9 @@ function Form() {
 
                     <button className='btn btn-primary' name='page' value='finish' type='submit' 
                     hidden={page !== Titles.length - 1}>Terminer</button>
+
+                    <br />
+                    <a href='/login' hidden={page > 0}>J'ai déjà un compte</a>
                 </div>
             </form>            
         </div>

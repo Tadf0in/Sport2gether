@@ -34,7 +34,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         new_appuser.save() 
 
         for key, value in infos['sports'].items():
-            print(key, value)
             if value['checked']:
                 new_usersport = UserSports()
                 new_usersport.user_id = new_user
@@ -62,12 +61,13 @@ class UserLoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
-    def check_user(self, infos):      
+    def check_user(self, infos):     
+        print(infos) 
         user = authenticate(username=infos['username'], password=infos['password'])
         if user is not None:
             return user
         else:
-            raise ValidationError("login failed, user not found")
+            raise ValidationError("login failed")
         
 
 class AppUserSerializer(serializers.ModelSerializer):

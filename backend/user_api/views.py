@@ -27,7 +27,7 @@ class UserRegister(APIView):
 
 class UserLogin(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = (SessionAuthentication,)
+    authentication_classes = (SessionAuthentication, BasicAuthentication,)
 
     def post(self, request):
         data = request.data
@@ -40,6 +40,7 @@ class UserLogin(APIView):
             user = serializer.check_user(data)
             login(request, user)
             return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
         
 
 class UserLogout(APIView):
