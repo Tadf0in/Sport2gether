@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import Input, {Loading} from './Fields'
 import { client } from '../../App'
-
 const sportValidation = (formData) => {
     if (formData.frequence !== '') {
         if (formData.ville !== '') {
@@ -24,7 +23,7 @@ function Sport({ formData, setFormData }) {
         getSportsApi()
     }, [])
 
-    const SpanSport = (sport, checked) => {
+    const SpanSport = ({sport, checked}) => {
         if (sports.length === 0) {
             return <Loading />
         } else {
@@ -33,6 +32,7 @@ function Sport({ formData, setFormData }) {
                     <input className="form-check-input" type="checkbox" value={sport.abrev} id={sport.id} 
                     checked={checked} onKeyDown={e => e.preventDefault()} 
                     onChange={(event) => {
+                        console.log(sport)
                         setFormData({
                             ...formData, sports: {
                                 ...formData.sports, [sport.abrev]: event.target.checked
@@ -51,18 +51,30 @@ function Sport({ formData, setFormData }) {
         return (
             <div className='span-sports'>{
                 Object.keys(sports).map((sport, i) => {
-                    
                     return (
-                        <SpanSport sport={sport} key={i} checked={formData.sports[[sport.abrev]]} />
+                        <SpanSport sport={sports[sport]} key={i} checked={formData.sports[[sports[sport].abrev]]} />
                     )
                 })}    
             </div>
         )
     }
 
-    if (sports.length === 0) {
+    const initChecks = () => {
+        let getcheck = {}
+        for (let sport of sports) {
+            getcheck[sport['abrev']] = false
+        }
+        setFormData({...formData, sports: getcheck})
+    }
+
+    if (sports.length === 0) { 
         return <Loading />
     } else {
+        if (Object.keys(formData.sports).length === 0) {
+            console.log(formData.sports, sports)
+            initChecks()
+        }
+        
         return (
             <div className='form-body'>
                 <SpanSports sports={sports}/>

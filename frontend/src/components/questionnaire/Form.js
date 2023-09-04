@@ -122,7 +122,6 @@ function Form() {
         })
     }
 
-    console.log(formData.sports)
     return (
         <div className='form' id='form'>
             <div className='progress'>

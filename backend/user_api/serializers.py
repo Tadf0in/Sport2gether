@@ -18,6 +18,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             email = infos['email'], 
             password = infos['password'],
             )
+        new_user.first_name = infos['first_name']
+        new_user.last_name = infos['last_name']
         new_user.save()
 
         new_appuser = AppUser()
@@ -26,10 +28,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         new_appuser.sexe = infos['gender']
         new_appuser.ville = infos['ville']
 
-
-        new_appuser.first_name = infos['first_name']
-        new_appuser.last_name = infos['last_name']
-
         new_appuser.objectif_court_terme = infos['obj_court']
         new_appuser.objectif_long_terme = infos['obj_long']
         new_appuser.plus_gros_defi_releve = infos['defi']
@@ -37,11 +35,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         new_appuser.save() 
 
-        for key, value in infos['sports'].items():
-            if value['checked']:
+        for abrev, checked in infos['sports'].items():
+            if checked:
                 new_usersport = UserSports()
                 new_usersport.user_id = new_user
-                new_usersport.sport_id = Sport.objects.get(abrev=key)
+                new_usersport.sport_id = Sport.objects.get(abrev=abrev)
                 new_usersport.save()
 
         if not (infos['raison'] == infos['det_raison'] ==
