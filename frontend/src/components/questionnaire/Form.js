@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Register, {registerValidation} from './Register'
 import Infos, {infosValidation} from './Infos'
 import Sport, {sportValidation} from './Sport'
@@ -8,6 +9,7 @@ import { client } from '../../App'
 
 
 function Form() {
+    const navigate = useNavigate()
     const [page, setPage] = useState(0)
     const [alert, setAlert] = useState('')
     const [formData, setFormData] = useState({
@@ -30,18 +32,13 @@ function Form() {
         det_attentes: ''
     })
 
-    // const setSportsList = (sportsData) => {
-    //     console.log(sportsData)
-    //     let sportsList = []
-    //     for (let i in sportsData) {
-    //         sportsList[[sportsData[i].abrev]] = {
-    //             name: sportsData[i].name,
-    //             icon_url: sportsData[i].icon_url,
-    //             checked: false,
-    //         } 
-    //     }
-    //     setFormData({...formData, sports: sportsList})
-    // }   
+    useEffect(() => {
+        const logout = async () => {
+            await client.post('/api/logout')
+            .catch((err) => console.log(err))
+        }
+        logout()
+    }, []) 
 
     const Titles = ["Créez votre compte", "Informations personnelles", "Pratique sportive", "Objectifs", "Questionnaire"]
     const Desc = [
@@ -106,12 +103,9 @@ function Form() {
         e.preventDefault()
 
         await client.post("/api/register", formData)
-
         .then((res) => {
-            console.log(res)
-            // redirect login
+            navigate('/api/login')
         })
-
         .catch((err) => {
             if (err.response.status === 500) {
                 setAlert("Cette adresse mail est déjà utilisée")

@@ -11,7 +11,8 @@ function Login() {
     useEffect(() => {
         const logout = async () => {
             await client.post('/api/logout')
-        } 
+            .catch((err) => console.log(err))
+        }
         logout()
     }, [])
 
