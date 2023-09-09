@@ -32,7 +32,6 @@ function Sport({ formData, setFormData }) {
                     <input className="form-check-input" type="checkbox" value={sport.abrev} id={sport.id} 
                     checked={checked} onKeyDown={e => e.preventDefault()} 
                     onChange={(event) => {
-                        console.log(sport)
                         setFormData({
                             ...formData, sports: {
                                 ...formData.sports, [sport.abrev]: event.target.checked
@@ -71,7 +70,6 @@ function Sport({ formData, setFormData }) {
         return <Loading />
     } else {
         if (Object.keys(formData.sports).length === 0) {
-            console.log(formData.sports, sports)
             initChecks()
         }
         

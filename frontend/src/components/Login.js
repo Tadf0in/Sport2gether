@@ -8,6 +8,13 @@ function Login() {
     const [password, setPassword] = useState('')
     const [alert, setAlert] = useState('')
 
+    useEffect(() => {
+        const logout = async () => {
+            await client.post('/api/logout')
+        } 
+        logout()
+    }, [])
+
     const submitLogin = async (e) => {
         e.preventDefault()
 
@@ -19,7 +26,6 @@ function Login() {
             navigate('/user')
         })
         .catch((err) => {
-            console.log(err)
             setAlert("Adresse mail ou mot de passe incorrect")
         })
     }

@@ -149,7 +149,3 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
 }
-
-SESSION_COOKIE_SAMESITE = None
-CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_SECURE = True

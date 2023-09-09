@@ -10,7 +10,7 @@ from django.contrib.auth import login, logout
 
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = (BasicAuthentication,)
+    authentication_classes = ()
     
     def post(self, request):
         data = request.data 
@@ -27,7 +27,8 @@ class UserRegister(APIView):
 
 class UserLogin(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = (SessionAuthentication, BasicAuthentication,)
+    authentication_classes = ()
+
 
     def post(self, request):
         data = request.data
@@ -63,7 +64,7 @@ class UserView(APIView):
 
 class SportView(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = (BasicAuthentication,)
+    authentication_classes = ()
 
     def get(self, request):
         sports = Sport.objects.all()

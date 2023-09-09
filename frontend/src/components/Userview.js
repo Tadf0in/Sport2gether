@@ -15,23 +15,11 @@ function Userview() {
                 setUserData(res.data.user)
             })
             .catch((err) => {
-                console.log(err)
                 navigate('/login')
             });
         } 
         getUserData()
     }, []);
-
-    const logout = async (e) => {
-        await client.post('/api/logout')
-        .then((res) => {
-            console.log(res)
-            navigate('/login')
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-    }
 
     if (Object.keys(userData).length === 0) {
         return <Loading />
@@ -40,7 +28,7 @@ function Userview() {
         return (
             <div>
             <h1>Bonjour, {userData.first_name}</h1>
-                <button onClick={logout} className='btn btn-danger' type='button'>Déconnexion</button>
+                <button onClick={() => navigate('/login')} className='btn btn-danger' type='button'>Déconnexion</button>
             </div>
         )
     }

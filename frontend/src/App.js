@@ -9,11 +9,8 @@ import axios from 'axios';
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.baseURL = 'http://127.0.0.1:8000'
 axios.defaults.withCredentials = true
 const client = axios.create({
-    xsrfCookieName: 'csrftoken',
-    xsrfHeaderName: 'X-CSRFToken',
     baseURL: "http://127.0.0.1:8000",
     withCredentials: true
   })
