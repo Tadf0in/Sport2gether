@@ -2,8 +2,12 @@ from rest_framework.views import APIView
 from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
-from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
+
 from django.contrib.auth import login, logout
+from django.db.models import Q
+
+from .models import Friendship
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, FriendsSerializer
 
 
 class UserRegister(APIView):
@@ -56,3 +60,21 @@ class UserView(APIView):
         serializer = UserSerializer(request.user)
         print(serializer)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
+    
+
+class FriendsView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (SessionAuthentication,)
+
+    def get(self, request):
+        user_friends = Friendship.objects.filter(user1=request.user)
+        
+        reciproque = []
+        for friend in user_friends:
+            check = Friendship.objects.filter(user1=friend.user2, user2=request.user)
+            if check.exists():
+                reciproque.append(check)
+        print(reciproque)
+
+        serializer = FriendsSerializer(reciproque, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

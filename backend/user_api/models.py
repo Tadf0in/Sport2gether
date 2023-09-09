@@ -12,7 +12,7 @@ class Sport(models.Model):
 
 
 class AppUser(models.Model):
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     age = models.PositiveSmallIntegerField()
     sexe = models.CharField(
@@ -42,7 +42,7 @@ class AppUser(models.Model):
     plus_gros_defi_releve = models.CharField(max_length=128, blank=True)
 
     def __str__(self):
-        return self.user_id.username
+        return self.user.username
     
     class Meta:
         verbose_name ='App User'
@@ -51,11 +51,11 @@ class AppUser(models.Model):
 
 
 class UserSports(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    sport_id = models.ForeignKey(Sport, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user_id.username  + " - " + self.sport_id.name
+        return self.user.username  + " - " + self.sport.name
 
     class Meta:
         verbose_name ='User Sports'
@@ -64,7 +64,7 @@ class UserSports(models.Model):
 
 
 class FeedBack(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     raison_choice = models.CharField(
         max_length=3,
@@ -85,3 +85,12 @@ class FeedBack(models.Model):
     class Meta:
         verbose_name ='Feedback'
         verbose_name_plural ='Feedbacks'
+
+
+class Friendship(models.Model):
+    user1 = models.ForeignKey(User, related_name='friend1', on_delete=models.CASCADE)
+    user2 = models.ForeignKey(User, related_name='firend2', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True, editable=False)
+
+    class Meta:
+        unique_together = ('user1', 'user2')
