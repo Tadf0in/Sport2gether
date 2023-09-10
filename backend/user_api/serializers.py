@@ -1,7 +1,7 @@
 from django.forms import ValidationError
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
-from .models import AppUser, Friendship
+from .models import AppUser, FriendRequest
 
 
 user_model = get_user_model()
@@ -72,7 +72,22 @@ class UserSerializer(serializers.ModelSerializer):
 
 class FriendsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Friendship
-        fields = '__all__'
+        model = user_model
+        fields =  ['id', 'username']
     
-        
+
+class FriendRequestsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendRequest
+        fields = '__all__'
+
+    # to_user = serializers.CharField()
+
+    def create(self, infos):
+        print(self.data)
+
+        # new_request = FriendRequest()
+        # new_request.from_user = self.data
+        # new_request.to_user = infos['to_user']
+        # new_request.save()
+        # return new_request

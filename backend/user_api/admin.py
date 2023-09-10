@@ -1,5 +1,5 @@
 from django.contrib import admin
-from.models import AppUser, Sport, UserSports, FeedBack, Friendship
+from.models import AppUser, Sport, UserSports, FeedBack, FriendRequest
 
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
@@ -18,11 +18,11 @@ admin.site.register(User, AppUserAdmin)
 
 
 
-
 @admin.register(AppUser)
 class AppUserAdmin(admin.ModelAdmin):
     list_display = ['username', 'email']
     search_fields = ['username', 'email']
+    filter_horizontal = ('friends',)
 
     def username(self, au):
         return au.user.username
@@ -30,7 +30,6 @@ class AppUserAdmin(admin.ModelAdmin):
     def email(self, au):
         return au.user.email
     
-
 
 @admin.register(Sport)
 class SportAdmin(admin.ModelAdmin):
@@ -63,7 +62,7 @@ class FeedBackAdmin(admin.ModelAdmin):
         return fb.user.username
     
 
-@admin.register(Friendship)
-class FriendsAdmin(admin.ModelAdmin):
-    list_display = ['user1', 'user2']
-    search_fields = ['user1', 'user2']
+@admin.register(FriendRequest)
+class FriendRequestsAdmin(admin.ModelAdmin):
+    list_display = ['from_user', 'to_user']
+    search_fields = ['from_user', 'to_user']

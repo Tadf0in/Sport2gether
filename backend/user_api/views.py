@@ -3,24 +3,20 @@ from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 
-from django.contrib.auth import login, logout
-from django.db.models import Q
+from django.contrib.auth import login, logout, get_user_model
 
-from .models import Friendship
-from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, FriendsSerializer
+from .models import AppUser, FriendRequest
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, FriendsSerializer, FriendRequestsSerializer
 
+user_model = get_user_model()
 
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny,)
     
     def post(self, request):
-        data = request.data 
-
-        ### validation
-
-        serializer = UserRegisterSerializer(data=data)
+        serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            user = serializer.create(data)
+            user = serializer.create(request.data)
             if user is not None:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -58,7 +54,6 @@ class UserView(APIView):
      
     def get(self, request):
         serializer = UserSerializer(request.user)
-        print(serializer)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
     
 
@@ -67,14 +62,33 @@ class FriendsView(APIView):
     authentication_classes = (SessionAuthentication,)
 
     def get(self, request):
-        user_friends = Friendship.objects.filter(user1=request.user)
-        
-        reciproque = []
-        for friend in user_friends:
-            check = Friendship.objects.filter(user1=friend.user2, user2=request.user)
-            if check.exists():
-                reciproque.append(check)
-        print(reciproque)
-
-        serializer = FriendsSerializer(reciproque, many=True)
+        friends = AppUser.objects.get(user=request.user).get_friends()
+        serializer = FriendsSerializer(friends, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class FriendRequestsView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (SessionAuthentication,)
+
+    def get(self, request):
+        requests = FriendRequest.objects.filter(from_user=request.user)
+        serializer = FriendRequestsSerializer(requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    # def post(self, request):     
+        # from_user = AppUser.objects.filter(user__username=request.data['from_user'])
+        # from_user = request.user
+        # to_user = user_model.objects.get(username=request.data['to_user'])
+
+        # infos = {
+        #     'from_user': from_user,
+        #     'to_user': to_user
+        # }
+
+        # serializer = FriendRequestsSerializer(data=infos)
+        # if serializer.is_valid(raise_exception=True):
+        #     new_request = serializer.create(infos)  
+            # if new_request is not None:
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -41,6 +41,12 @@ class AppUser(models.Model):
     objectif_long_terme = models.CharField(max_length=128, blank=True)
     plus_gros_defi_releve = models.CharField(max_length=128, blank=True)
 
+    friends = models.ManyToManyField(User, related_name='friends', blank=True)
+    # sports = models.ManyToManyField(Sport, blank=True)
+
+    def get_friends(self):
+        return self.friends.all()
+
     def __str__(self):
         return self.user.username
     
@@ -87,10 +93,10 @@ class FeedBack(models.Model):
         verbose_name_plural ='Feedbacks'
 
 
-class Friendship(models.Model):
-    user1 = models.ForeignKey(User, related_name='friend1', on_delete=models.CASCADE)
-    user2 = models.ForeignKey(User, related_name='firend2', on_delete=models.CASCADE)
+class FriendRequest(models.Model):
+    from_user = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True, editable=False)
 
     class Meta:
-        unique_together = ('user1', 'user2')
+        unique_together = ('from_user', 'to_user')
