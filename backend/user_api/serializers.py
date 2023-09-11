@@ -13,7 +13,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, infos):
-        print(infos)
         new_user = user_model.objects.create_user(
             username = infos['username'], 
             email = infos['username'], 
@@ -81,13 +80,14 @@ class FriendRequestsSerializer(serializers.ModelSerializer):
         model = FriendRequest
         fields = '__all__'
 
-    # to_user = serializers.CharField()
+    from_user = serializers.CharField()
+    to_user = serializers.CharField()
 
     def create(self, infos):
-        print(self.data)
+        from_user = user_model.objects.get(username=infos['from_user'])
+        to_user = user_model.objects.get(username=infos['to_user'])
+        
+        new_request, created = FriendRequest.objects.get_or_create(from_user=from_user, to_user=to_user)
 
-        # new_request = FriendRequest()
-        # new_request.from_user = self.data
-        # new_request.to_user = infos['to_user']
-        # new_request.save()
-        # return new_request
+        return created
+    

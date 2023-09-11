@@ -4,6 +4,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 
 from django.contrib.auth import login, logout, get_user_model
+from django.db.models import Q
 
 from .models import AppUser, FriendRequest
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, FriendsSerializer, FriendRequestsSerializer
@@ -72,23 +73,18 @@ class FriendRequestsView(APIView):
     authentication_classes = (SessionAuthentication,)
 
     def get(self, request):
-        requests = FriendRequest.objects.filter(from_user=request.user)
+        requests = FriendRequest.objects.filter(Q(from_user=request.user) | Q(to_user=request.user))
         serializer = FriendRequestsSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    # def post(self, request):     
-        # from_user = AppUser.objects.filter(user__username=request.data['from_user'])
-        # from_user = request.user
-        # to_user = user_model.objects.get(username=request.data['to_user'])
-
-        # infos = {
-        #     'from_user': from_user,
-        #     'to_user': to_user
-        # }
-
-        # serializer = FriendRequestsSerializer(data=infos)
-        # if serializer.is_valid(raise_exception=True):
-        #     new_request = serializer.create(infos)  
-            # if new_request is not None:
-        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-        # return Response(status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        data = request.data
+        data['from_user'] = request.user.username
+        serializer = FriendRequestsSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            new_request = serializer.create(data)  
+            if new_request:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(status=status.HTTP_303_SEE_OTHER)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

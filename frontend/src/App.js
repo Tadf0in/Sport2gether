@@ -1,6 +1,5 @@
 import logo from './logo.svg';
 import './App.css';
-import Button from 'react-bootstrap/Button';
 
 
 function App() {
@@ -11,7 +10,6 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <Button>This is a button</Button>
         <a
           className="App-link"
           href="https://reactjs.org"
