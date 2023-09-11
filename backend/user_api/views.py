@@ -78,11 +78,27 @@ class FriendRequestsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
+        from_user = request.user
+        to_user = user_model.objects.get(username=request.data['to_user'])
+
+        # Check if already friends
+        if from_user in to_user.appuser.get_friends() or to_user in from_user.appuser.get_friends():
+            return Response("Already friends", status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check if reciproque request already exists 
+        reciprocity = FriendRequest.objects.filter(from_user=to_user, to_user=from_user)
+        if reciprocity.exists():
+            from_user.appuser.friends.add(to_user)
+            to_user.appuser.friends.add(from_user)
+            reciprocity.delete()
+            return Response("Request accepted, now friends", status=status.HTTP_201_CREATED)
+        else:
+            new_request, created = FriendRequest.objects.get_or_create(from_user=from_user, to_user=to_user)
+            if created:
+                return Response("Request sent", status=status.HTTP_201_CREATED)
+            else:
+                return Response("Request already sent", status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, target_user):
         data = request.data
         data['from_user'] = request.user.username
-        serializer = FriendRequestsSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            new_request = serializer.create(data)  
-            if new_request:
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
