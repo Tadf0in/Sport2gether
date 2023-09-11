@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework import permissions, status
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 
 from django.contrib.auth import login, logout, get_user_model
