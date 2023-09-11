@@ -1,7 +1,7 @@
 from django.forms import ValidationError
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
-from .models import AppUser, Sport, FeedBack, UserSports
+from .models import AppUser, Sport, FeedBack, UserSports, FriendRequest
 
 
 user_model = get_user_model()
@@ -84,9 +84,21 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_model
         fields = '__all__'
-
+        
 
 class SportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sport
+        fields = '__all__'
+
+
+class FriendsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = user_model
+        fields =  ['id', 'username']
+    
+
+class FriendRequestsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendRequest
         fields = '__all__'
