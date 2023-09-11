@@ -13,6 +13,8 @@ class AppUserInline(admin.StackedInline):
 class AppUserAdmin(UserAdmin):
     inlines = [AppUserInline]
 
+    list_display = ['username', 'first_name', 'last_name', 'id']
+
 admin.site.unregister(User)
 admin.site.register(User, AppUserAdmin)
 

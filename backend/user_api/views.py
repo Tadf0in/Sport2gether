@@ -62,24 +62,33 @@ class FriendsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
 
-    def get(self, request):
+    def get(self, request, friend_pk=None):
         friends = AppUser.objects.get(user=request.user).get_friends()
         serializer = FriendsSerializer(friends, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def delete(self, request, friend_pk):
+        user = request.user
+        target_user = user_model.objects.get(pk=friend_pk)
+        
+        user.appuser.friends.remove(target_user)
+        target_user.appuser.friends.remove(request.user)
+
+        return Response(status=status.HTTP_200_OK)
     
 
 class FriendRequestsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
 
-    def get(self, request):
+    def get(self, request, pk=None):
         requests = FriendRequest.objects.filter(Q(from_user=request.user) | Q(to_user=request.user))
         serializer = FriendRequestsSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request):
+    def post(self, request, pk=None):
         from_user = request.user
-        to_user = user_model.objects.get(username=request.data['to_user'])
+        to_user = user_model.objects.get(pk=request.data['to_user'])
 
         # Check if already friends
         if from_user in to_user.appuser.get_friends() or to_user in from_user.appuser.get_friends():
@@ -99,6 +108,6 @@ class FriendRequestsView(APIView):
             else:
                 return Response("Request already sent", status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, target_user):
-        data = request.data
-        data['from_user'] = request.user.username
+    def delete(self, request, pk):
+        FriendRequest.objects.filter(from_user=request.user, pk=pk).delete()
+        return Response(status=status.HTTP_200_OK)
