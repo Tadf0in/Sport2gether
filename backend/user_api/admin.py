@@ -64,5 +64,6 @@ class FeedBackAdmin(admin.ModelAdmin):
 
 @admin.register(FriendRequest)
 class FriendRequestsAdmin(admin.ModelAdmin):
-    list_display = ['from_user', 'to_user']
+    list_display = ['from_user', 'to_user', 'date']
     search_fields = ['from_user', 'to_user']
+    list_filter = ['date']

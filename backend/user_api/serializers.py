@@ -86,8 +86,18 @@ class FriendRequestsSerializer(serializers.ModelSerializer):
     def create(self, infos):
         from_user = user_model.objects.get(username=infos['from_user'])
         to_user = user_model.objects.get(username=infos['to_user'])
-        
-        new_request, created = FriendRequest.objects.get_or_create(from_user=from_user, to_user=to_user)
 
-        return created
+        # Check if already friends
+        if from_user in to_user.appuser.get_friends() or to_user in from_user.appuser.get_friends():
+            return False
+            
+        reciprocity = FriendRequest.objects.filter(from_user=to_user, to_user=from_user)
+        if reciprocity.exists():
+            from_user.appuser.friends.add(to_user)
+            to_user.appuser.friends.add(from_user)
+            reciprocity.delete()
+            return True
+        else:
+            new_request, created = FriendRequest.objects.get_or_create(from_user=from_user, to_user=to_user)
+            return created
     

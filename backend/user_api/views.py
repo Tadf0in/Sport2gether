@@ -85,6 +85,4 @@ class FriendRequestsView(APIView):
             new_request = serializer.create(data)  
             if new_request:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(status=status.HTTP_303_SEE_OTHER)
         return Response(status=status.HTTP_400_BAD_REQUEST)
