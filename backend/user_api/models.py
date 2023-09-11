@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 
 
 class Sport(models.Model):
+    abrev = models.CharField(max_length=5, unique=True)
     name = models.CharField(max_length=128, unique=True)
+    icon_url = models.URLField(max_length=128, blank=True)
 
     def __str__(self):
         return self.name
@@ -75,16 +77,23 @@ class FeedBack(models.Model):
     raison_choice = models.CharField(
         max_length=3,
         choices=[
+            ("ami", "Un ami m'en a parlé"),
+            ("pub", "Une publicité"),
+            ("app", "Depuis l'AppStore"),
             ("oth", "Autre")
-        ]
+        ],
+        default="oth"
     )
     raisons = models.CharField(max_length=128, blank=True)
 
     attente_choice = models.CharField(
         max_length=3,
         choices=[
+            ("ren", "Faire des rencontres"),
+            ("mot", "Trouver de la motivation"),
             ("oth", "Autre")
-        ]
+        ],
+        default="oth"
     )
     attentes = models.CharField(max_length=128, blank=True)
 
