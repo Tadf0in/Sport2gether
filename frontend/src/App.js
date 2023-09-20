@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Routes, Route} from 'react-router-dom'
 import Form from './components/questionnaire/Form';
 import Login from './components/Login';
-import Userview from './components/Userview';
+import Userview from './components/userview/Userview';
 import axios from 'axios';
 
 axios.defaults.xsrfCookieName = 'csrftoken'

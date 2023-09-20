@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { client } from '../App';
-import { Loading } from './questionnaire/Fields';
+import { client } from '../../App';
+import { Loading } from '../questionnaire/Fields';
+import UserFriends from './UserFriends';
 
 
 function Userview() {
@@ -27,8 +28,9 @@ function Userview() {
         console.log(userData)
         return (
             <div>
-            <h1>Bonjour, {userData.first_name}</h1>
+                <h1>Bonjour, {userData.first_name}</h1>
                 <button onClick={() => navigate('/login')} className='btn btn-danger' type='button'>Déconnexion</button>
+                <UserFriends/>
             </div>
         )
     }
