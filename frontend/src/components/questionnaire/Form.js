@@ -34,7 +34,7 @@ function Form() {
 
     useEffect(() => {
         const logout = async () => {
-            await client.post('/api/logout')
+            await client.post('/api/user/logout')
             .catch((err) => console.log(err))
         }
         logout()
@@ -98,13 +98,11 @@ function Form() {
     }
 
     const submitRegistration = async (e) => {
-        console.log(formData)
-        console.log(JSON.stringify(formData))
         e.preventDefault()
 
-        await client.post("/api/register", formData)
+        await client.post("/api/user/register", formData)
         .then((res) => {
-            navigate('/api/login')
+            navigate('/login')
         })
         .catch((err) => {
             if (err.response.status === 500) {

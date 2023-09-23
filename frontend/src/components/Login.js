@@ -10,7 +10,7 @@ function Login() {
 
     useEffect(() => {
         const logout = async () => {
-            await client.post('/api/logout')
+            await client.post('/api/user/logout')
             .catch((err) => console.log(err))
         }
         logout()
@@ -19,7 +19,7 @@ function Login() {
     const submitLogin = async (e) => {
         e.preventDefault()
 
-        await client.post('/api/login', {
+        await client.post('/api/user/login', {
             username: email,
             password: password
         })

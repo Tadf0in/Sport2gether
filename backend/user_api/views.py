@@ -6,8 +6,10 @@ from rest_framework.response import Response
 from django.contrib.auth import login, logout, get_user_model
 from django.db.models import Q
 
-from .models import Sport, AppUser, FriendRequest
-from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, SportSerializer, FriendsSerializer, FriendRequestsSerializer
+from .models import AppUser, FriendRequest
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, FriendsSerializer, FriendRequestsSerializer
+from sport_api.models import Sport
+from sport_api.serializers import SportSerializer
 
 user_model = get_user_model()
 
@@ -16,6 +18,11 @@ class UserRegister(APIView):
     authentication_classes = ()
     
     def post(self, request):
+        """
+        request : {
+            [voir formData dans frontend/src/components/Form.js]
+        }
+        """
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.create(request.data)
@@ -30,6 +37,12 @@ class UserLogin(APIView):
 
 
     def post(self, request):
+        """
+        request : {
+            username: str,
+            password: str        
+        }
+        """
         data = request.data
             
 		# assert validate_email(data)
@@ -59,24 +72,8 @@ class UserView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
- 
 
-class SportView(APIView):
-    permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
 
-    def get(self, request):
-        sports = Sport.objects.all()
-        serializer = SportSerializer(sports, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    # def post(self, request):
-    #     serializer = SportSerializer(data=request.data)
-    #     if serializer.is_valid(raise_exception=True):
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    
 class FriendsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
@@ -106,6 +103,11 @@ class FriendRequestsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, pk=None):
+        """
+        request : {
+            to_user: str
+        }
+        """
         from_user = request.user
         to_user = user_model.objects.get(pk=request.data['to_user'])
 
@@ -130,3 +132,29 @@ class FriendRequestsView(APIView):
     def delete(self, request, pk):
         FriendRequest.objects.filter(from_user=request.user, pk=pk).delete()
         return Response(status=status.HTTP_200_OK)
+
+
+class UserSportsView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (SessionAuthentication,)
+
+    def get(self, request, sport_pk=None):
+        sports = request.user.appuser.get_sports()
+        serializer = SportSerializer(sports, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, sport_pk=None):
+        """
+        request : {
+            sport_pk: int
+        }
+        """
+        sport = Sport.objects.get(pk=request.data['sport_pk'])
+        request.user.appuser.sports.add(sport)
+        serializer = SportSerializer(sport)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    def delete(self, request, sport_pk):
+        request.user.appuser.sports.remove(Sport.objects.get(pk=sport_pk))
+        return Response(status=status.HTTP_200_OK)
+

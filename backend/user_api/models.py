@@ -1,16 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-
-
-class Sport(models.Model):
-    abrev = models.CharField(max_length=5, unique=True)
-    name = models.CharField(max_length=128, unique=True)
-    icon_url = models.URLField(max_length=128, blank=True)
-
-    def __str__(self):
-        return self.name
-    
+from sport_api.models import Sport   
 
 
 class AppUser(models.Model):
@@ -44,10 +34,13 @@ class AppUser(models.Model):
     plus_gros_defi_releve = models.CharField(max_length=128, blank=True)
 
     friends = models.ManyToManyField(User, related_name='friends', blank=True)
-    # sports = models.ManyToManyField(Sport, blank=True)
+    sports = models.ManyToManyField(Sport, related_name='sports', blank=True)
 
     def get_friends(self):
         return self.friends.all()
+    
+    def get_sports(self):
+        return self.sports.all()
 
     def __str__(self):
         return self.user.username
@@ -55,20 +48,6 @@ class AppUser(models.Model):
     class Meta:
         verbose_name ='App User'
         verbose_name_plural ='App Users'
-
-
-
-class UserSports(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username  + " - " + self.sport.name
-
-    class Meta:
-        verbose_name ='User Sports'
-        verbose_name_plural ='Users Sports'
-
 
 
 class FeedBack(models.Model):

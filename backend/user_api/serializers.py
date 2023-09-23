@@ -1,7 +1,8 @@
 from django.forms import ValidationError
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
-from .models import AppUser, Sport, FeedBack, UserSports, FriendRequest
+from .models import *
+from sport_api.models import Sport
 
 
 user_model = get_user_model()
@@ -23,7 +24,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         new_user.save()
 
         new_appuser = AppUser()
-        new_appuser.user_id = new_user       
+        new_appuser.user = new_user       
         new_appuser.age = int(infos['age'])
         new_appuser.sexe = infos['gender']
         new_appuser.ville = infos['ville']
@@ -33,15 +34,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         new_appuser.plus_gros_defi_releve = infos['defi']
         new_appuser.frequence_entrainement = infos['frequence']
 
-        new_appuser.save() 
+        new_appuser.save()
 
-        for abrev, checked in infos['sports'].items():
+        for sport_pk, checked in infos['sports'].items():
             if checked:
-                new_usersport = UserSports()
-                new_usersport.user_id = new_user
-                new_usersport.sport_id = Sport.objects.get(abrev=abrev)
-                new_usersport.save()
+                new_appuser.sports.add(Sport.objects.get(pk=sport_pk))
 
+        new_appuser.save()
+        
         if not (infos['raison'] == infos['det_raison'] ==
                 infos['attente'] == infos['det_attentes'] == ''):
             new_feedback = FeedBack()
@@ -83,12 +83,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = user_model
-        fields = '__all__'
-        
-
-class SportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Sport
         fields = '__all__'
 
 

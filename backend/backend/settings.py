@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'user_api',
+    'sport_api',
+    'post_api',
 ]
 
 MIDDLEWARE = [
@@ -123,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 
