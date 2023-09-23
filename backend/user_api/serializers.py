@@ -36,9 +36,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         new_appuser.save()
 
-        for abrev, checked in infos['sports'].items():
+        for sport_pk, checked in infos['sports'].items():
             if checked:
-                new_appuser.sports.add(Sport.objects.get(abrev=abrev))
+                new_appuser.sports.add(Sport.objects.get(pk=sport_pk))
 
         new_appuser.save()
         

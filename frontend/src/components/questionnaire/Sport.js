@@ -29,12 +29,12 @@ function Sport({ formData, setFormData }) {
         } else {
             return (
                 <div className="form-check">
-                    <input className="form-check-input" type="checkbox" value={sport.abrev} id={sport.id} 
+                    <input className="form-check-input" type="checkbox" value={sport.id} id={sport.id} 
                     checked={checked} onKeyDown={e => e.preventDefault()} 
                     onChange={(event) => {
                         setFormData({
                             ...formData, sports: {
-                                ...formData.sports, [sport.abrev]: event.target.checked
+                                ...formData.sports, [sport.id]: event.target.checked
                             }
                         })
                     }}
@@ -51,7 +51,7 @@ function Sport({ formData, setFormData }) {
             <div className='span-sports'>{
                 Object.keys(sports).map((sport, i) => {
                     return (
-                        <SpanSport sport={sports[sport]} key={i} checked={formData.sports[[sports[sport].abrev]]} />
+                        <SpanSport sport={sports[sport]} key={i} checked={formData.sports[[sports[sport].id]]} />
                     )
                 })}    
             </div>
@@ -61,7 +61,7 @@ function Sport({ formData, setFormData }) {
     const initChecks = () => {
         let getcheck = {}
         for (let sport of sports) {
-            getcheck[sport['abrev']] = false
+            getcheck[sport['id']] = false
         }
         setFormData({...formData, sports: getcheck})
     }
