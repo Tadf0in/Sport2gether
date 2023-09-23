@@ -14,7 +14,7 @@ function Sport({ formData, setFormData }) {
 
     useEffect(() => {
         const getSportsApi = async () => {
-            await client.get('/api/sports')
+            await client.get('/api/sport/')
             .then((res) => {
                 setSports(res.data)
             }) 

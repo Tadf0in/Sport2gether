@@ -2,6 +2,7 @@ from django.forms import ValidationError
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from .models import *
+from sport_api.models import Sport
 
 
 user_model = get_user_model()
@@ -34,7 +35,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         new_appuser.frequence_entrainement = infos['frequence']
 
         new_appuser.save()
-
 
         for abrev, checked in infos['sports'].items():
             if checked:
@@ -83,12 +83,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = user_model
-        fields = '__all__'
-        
-
-class SportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Sport
         fields = '__all__'
 
 

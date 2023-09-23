@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from django.contrib.auth import login, logout, get_user_model
 from django.db.models import Q
 
-from .models import Sport, AppUser, FriendRequest
-from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, SportSerializer, FriendsSerializer, FriendRequestsSerializer
+from .models import AppUser, FriendRequest
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, FriendsSerializer, FriendRequestsSerializer
 
 user_model = get_user_model()
 
@@ -70,24 +70,8 @@ class UserView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
-    
 
-class SportView(APIView):
-    permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
 
-    def get(self, request):
-        sports = Sport.objects.all()
-        serializer = SportSerializer(sports, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    # def post(self, request):
-    #     serializer = SportSerializer(data=request.data)
-    #     if serializer.is_valid(raise_exception=True):
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    
 class FriendsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)

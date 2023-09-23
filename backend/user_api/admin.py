@@ -31,11 +31,6 @@ class AppUserAdmin(admin.ModelAdmin):
     
     def email(self, au):
         return au.user.email
-    
-
-@admin.register(Sport)
-class SportAdmin(admin.ModelAdmin):
-    search_fields = ['name']
 
 
 @admin.register(FeedBack)
