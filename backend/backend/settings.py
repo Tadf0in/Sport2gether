@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'user_api',
+    'sport_api',
     'post_api',
 ]
 

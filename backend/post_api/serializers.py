@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from rest_framework.fields import empty
 from .models import *
 
 user_model = get_user_model()
