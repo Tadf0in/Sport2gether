@@ -6,40 +6,48 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 
 class postsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
 
+    @swagger_auto_schema(responses={200:PostsSerializer})
     def get(self, request):
         posts = Post.objects.all()
         serializer = PostsSerializer(posts, many=True) 
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('title', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('desc', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('date', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('location', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('private', openapi.IN_QUERY, type=openapi.TYPE_BOOLEAN, required=True),
+            openapi.Parameter('nb_limit', openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True)
+        ],
+        responses={201:"CREATED", 400:"BAD REQUEST"}
+    )
     def post(self, request):
-        """
-        request : {
-            title: str,
-            desc: str,
-            date: datetime,
-            location: str,
-            private: bool,
-            nb_limit: int
-        }
-        """
         data = request.data
         data['post_author'] = request.user
         data['date'] += '+02:00'
         new_post = Post(**data)
         new_post.save()
         serializer = PostSerializer(new_post)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if serializer.is_valid(raise_exception=True):
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class postView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
 
+    @swagger_auto_schema(responses={200:PostSerializer})
     def get(self, request, post_pk):
         post = Post.objects.get(pk=post_pk)
         serializer = PostSerializer(post) 
@@ -54,31 +62,33 @@ class commentsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
 
+    @swagger_auto_schema(responses={200:CommentsSerializer})
     def get(self, request, post_pk):
         comments = Comment.objects.filter(post__pk=post_pk)
         serializer = CommentsSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+    @swagger_auto_schema(
+        manual_parameters=[openapi.Parameter('text', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True)],
+        responses={201:"CREATED", 400:"BAD REQUEST"}
+    )
     def post(self, request, post_pk):
-        """
-        request : {
-            text: str,
-        }
-        """
         new_comment = Comment()
         new_comment.text = request.data['text']
         new_comment.comment_author = request.user
         new_comment.post = Post.objects.get(pk=post_pk) 
         new_comment.save()
         serializer = CommentSerializer(new_comment)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if serializer.is_valid(raise_exception=True):
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
 
 class commentView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
 
+    @swagger_auto_schema(responses={200:CommentSerializer})
     def get(self, request, post_pk, comment_pk):
         comment = Comment.objects.get(pk=comment_pk)
         serializer = CommentSerializer(comment)

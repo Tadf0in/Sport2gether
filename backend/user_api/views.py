@@ -11,18 +11,45 @@ from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerial
 from sport_api.models import Sport
 from sport_api.serializers import SportSerializer
 
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 user_model = get_user_model()
+
 
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     
-    def post(self, request):
-        """
-        request : {
-            [voir formData dans frontend/src/components/Form.js]
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('email', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('password', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('first_name', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('last_name', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('age', openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True),
+            openapi.Parameter('gender', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('ville', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('obj_court', openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter('obj_long', openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter('defi', openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter('frequence', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('sports', openapi.IN_QUERY, type=openapi.TYPE_ARRAY, items=[
+                openapi.Parameter('id', openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+                openapi.Parameter('checked', openapi.IN_QUERY, type=openapi.TYPE_BOOLEAN)
+            ]),
+            openapi.Parameter('raison', openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter('det_raison', openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter('attente', openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter('det_attentes', openapi.IN_QUERY, type=openapi.TYPE_STRING)      
+        ],
+        responses={
+            201:"CREATED",
+            400:"BAD REQUEST",
+            500:"INTERNAL ERROR ex: Username Already Exist"
         }
-        """
+    )
+    def post(self, request):
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.create(request.data)
@@ -35,40 +62,42 @@ class UserLogin(APIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
 
-
-    def post(self, request):
-        """
-        request : {
-            username: str,
-            password: str        
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('username', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter('password', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True)
+        ],
+        responses={
+            200:"OK",
+            400:"BAD REQUEST"
         }
-        """
+    )
+    def post(self, request):
         data = request.data
-            
-		# assert validate_email(data)
-		# assert validate_password(data)
         
         serializer = UserLoginSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.check_user(data)
             login(request, user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
         
 
 class UserLogout(APIView):
-	permission_classes = (permissions.AllowAny,)
-	authentication_classes = ()
-     
-	def post(self, request):
-		logout(request)
-		return Response(status=status.HTTP_200_OK)
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    
+    @swagger_auto_schema(responses={200:"OK"})
+    def post(self, request):
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
 
 
 class UserView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
-     
+    
+    @swagger_auto_schema(responses={200:UserSerializer, 403:"FORBIDDEN"},)
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
@@ -78,6 +107,7 @@ class FriendsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
 
+    @swagger_auto_schema(responses={200:FriendsSerializer, 403:"FORBIDDEN"})
     def get(self, request, friend_pk=None):
         friends = AppUser.objects.get(user=request.user).get_friends()
         serializer = FriendsSerializer(friends, many=True)
@@ -97,17 +127,17 @@ class FriendRequestsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
 
+    @swagger_auto_schema(responses={200:FriendRequestsSerializer, 403:"FORBIDDEN"})
     def get(self, request, pk=None):
         requests = FriendRequest.objects.filter(Q(from_user=request.user) | Q(to_user=request.user))
         serializer = FriendRequestsSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    @swagger_auto_schema(
+        manual_parameters=[openapi.Parameter('to_user', openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True)],
+        responses={200:"OK",  400:"BAD REQUEST", 403:"FORBIDDEN"}
+    )
     def post(self, request, pk=None):
-        """
-        request : {
-            to_user: str
-        }
-        """
         from_user = request.user
         to_user = user_model.objects.get(pk=request.data['to_user'])
 
@@ -138,17 +168,17 @@ class UserSportsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (SessionAuthentication,)
 
+    @swagger_auto_schema(responses={200:SportSerializer, 403:"FORBIDDEN"})
     def get(self, request, sport_pk=None):
         sports = request.user.appuser.get_sports()
         serializer = SportSerializer(sports, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    @swagger_auto_schema(
+        manual_parameters=[openapi.Parameter('sport_pk', openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True)],
+        responses={200:"OK",  400:"BAD REQUEST", 403:"FORBIDDEN"}
+    )
     def post(self, request, sport_pk=None):
-        """
-        request : {
-            sport_pk: int
-        }
-        """
         sport = Sport.objects.get(pk=request.data['sport_pk'])
         request.user.appuser.sports.add(sport)
         serializer = SportSerializer(sport)
