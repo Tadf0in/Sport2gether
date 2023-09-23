@@ -6,7 +6,6 @@ urlpatterns = [
 	path('login', views.UserLogin.as_view(), name='login'),
 	path('logout', views.UserLogout.as_view(), name='logout'),
 	path('', views.UserView.as_view(), name='user'),
-  	path('sports', views.SportView.as_view(), name='sports'),
 	path('friends', views.FriendsView.as_view(), name='friends'),
  	path('friends/<int:friend_pk>', views.FriendsView.as_view(), name='friend'),
 	path('friends/requests', views.FriendRequestsView.as_view(), name='friendrequests'),
