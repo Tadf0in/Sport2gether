@@ -1,7 +1,7 @@
 from django.forms import ValidationError
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
-from .models import AppUser, Sport, FeedBack, UserSports, FriendRequest
+from .models import *
 
 
 user_model = get_user_model()
@@ -22,7 +22,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         new_user.last_name = infos['last_name']
         new_user.save()
 
-        new_appuser = AppUser()
+        new_appuser = models.AppUser()
         new_appuser.user_id = new_user       
         new_appuser.age = int(infos['age'])
         new_appuser.sexe = infos['gender']

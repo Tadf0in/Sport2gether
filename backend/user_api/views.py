@@ -16,6 +16,11 @@ class UserRegister(APIView):
     authentication_classes = ()
     
     def post(self, request):
+        """
+        request : {
+            [voir formData dans frontend/src/components/Form.js]
+        }
+        """
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.create(request.data)
@@ -30,6 +35,12 @@ class UserLogin(APIView):
 
 
     def post(self, request):
+        """
+        request : {
+            username: str,
+            password: str        
+        }
+        """
         data = request.data
             
 		# assert validate_email(data)
@@ -106,6 +117,11 @@ class FriendRequestsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, pk=None):
+        """
+        request : {
+            to_user: str
+        }
+        """
         from_user = request.user
         to_user = user_model.objects.get(pk=request.data['to_user'])
 

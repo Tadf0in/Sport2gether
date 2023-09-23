@@ -19,7 +19,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    post = models.OneToOneField(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment_author = models.ForeignKey(user_model, related_name="comment_author", on_delete=models.CASCADE)
     text = models.TextField()
     comment_date = models.DateTimeField(auto_now_add=True, editable=False)
