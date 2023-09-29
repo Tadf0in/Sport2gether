@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from sport_api.models import Sport
 
 user_model = get_user_model()
 
@@ -13,6 +14,7 @@ class Post(models.Model):
     private = models.BooleanField()
     nb_limit = models.SmallIntegerField()
     inscrits = models.ManyToManyField(user_model, related_name="inscrits", blank=True)
+    sport = models.ForeignKey(Sport, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.title

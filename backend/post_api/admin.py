@@ -6,7 +6,7 @@ from .models import Post, Comment
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'post_author', 'date', 'location')
     search_fields = ('author', 'title', 'date', 'posted_date', 'location')
-    list_filter = ('location', 'date', 'posted_date')
+    list_filter = ('location', 'date', 'posted_date', 'sport')
     readonly_fields = ('posted_date',)
 
 

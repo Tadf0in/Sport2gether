@@ -10,6 +10,12 @@ class PostsSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'title']
 
+    def create(self, data):
+        new_post = Post(**data)
+        new_post.save()
+        return new_post
+
+
 class PostSerializer(serializers.ModelSerializer):
     class Meta:        
         model = Post

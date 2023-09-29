@@ -27,19 +27,22 @@ class postsView(APIView):
             openapi.Parameter('date', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
             openapi.Parameter('location', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
             openapi.Parameter('private', openapi.IN_QUERY, type=openapi.TYPE_BOOLEAN, required=True),
-            openapi.Parameter('nb_limit', openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True)
+            openapi.Parameter('nb_limit', openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True),
+            openapi.Parameter('sport', openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True)
         ],
         responses={201:"CREATED", 400:"BAD REQUEST"}
     )
     def post(self, request):
         data = request.data
-        data['post_author'] = request.user
+        data['post_author'] = request.user.pk
         data['date'] += '+02:00'
-        new_post = Post(**data)
-        new_post.save()
-        serializer = PostSerializer(new_post)
+        serializer = PostSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            data['post_author'] = user_model.objects.get(pk=request.user.pk)
+            data['sport'] = Sport.objects.get(pk=data['sport'])
+            post = serializer.create(data)
+            if post is not None:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
